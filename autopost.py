@@ -449,7 +449,10 @@ def git_push(paths: list[Path], message: str) -> None:
 
 
 def ig(method: str, path: str, **params) -> dict:
-    base = f"https://graph.instagram.com/{os.environ.get('IG_API_VERSION', 'v21.0')}"
+    # graph.facebook.com for system-user / Facebook Login tokens (new Meta apps),
+    # graph.instagram.com for Instagram Login tokens (IGAA...).
+    host = os.environ.get("IG_API_HOST") or ("graph.instagram.com" if os.environ["IG_TOKEN"].startswith("IG") else "graph.facebook.com")
+    base = f"https://{host}/{os.environ.get('IG_API_VERSION', 'v21.0')}"
     params["access_token"] = os.environ["IG_TOKEN"]
     data = urllib.parse.urlencode(params).encode()
     url = f"{base}/{path}" + ("" if method == "POST" else "?" + data.decode())
