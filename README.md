@@ -2,7 +2,7 @@
 
 Posts one carousel to @newz.213 at a time, without anyone in the loop:
 
-1. **News card**: the article's photo full bleed, the logos of the papers that reported it (up to 3, then +N), the headline as white highlighted blocks, one detail, the section and date, the app icon top corner. French or Arabic depending on the papers. With no usable photo it falls back to the app's green.
+1. **News card**: the article's photo full bleed, the full logos (wordmarks) of the papers that reported it, in white tags (up to 3, then +N), the headline as white highlighted blocks, one detail, the section and date, the app icon top corner. French or Arabic depending on the papers. With no usable photo it falls back to the app's green.
 2. **App promo slide**: `public/promo-fr.jpg` or `public/promo-ar.jpg`, the green slide picked on 20 Nov 2026.
 
 A GitHub Actions job runs `autopost.py` every 30 minutes. Most runs post nothing. A run posts only when all of these are true:

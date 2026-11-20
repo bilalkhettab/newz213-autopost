@@ -430,11 +430,18 @@ def pick_photo(story: list[dict]) -> tuple[Path | None, str | None]:
     return out, SOURCES[best[0]][0]
 
 
-def logo_file(sid: str) -> str | None:
+def logo_html(sid: str) -> str:
+    """Full wordmark when the app has one, else the square icon (uncropped) plus the name."""
+    d = TEMPLATES / "assets" / "logos"
     for ext in ("svg", "png"):
-        if (TEMPLATES / "assets" / "logos" / f"icon-{sid}.{ext}").exists():
-            return f"assets/logos/icon-{sid}.{ext}"
-    return None
+        if (d / f"wordmark-{sid}.{ext}").exists():
+            return f'<div class="logo"><img src="assets/logos/wordmark-{sid}.{ext}"></div>'
+    name = SOURCES[sid][0]
+    cls = "logo ar" if has_arabic(name) else "logo"
+    for ext in ("svg", "png"):
+        if (d / f"icon-{sid}.{ext}").exists():
+            return f'<div class="{cls}"><img class="sq" src="assets/logos/icon-{sid}.{ext}">{esc(name)}</div>'
+    return f'<div class="{cls}">{esc(name)}</div>'
 
 
 def render_card(post: dict, story: list[dict], lang: str, out_jpg: Path) -> None:
@@ -444,11 +451,9 @@ def render_card(post: dict, story: list[dict], lang: str, out_jpg: Path) -> None
     for a in story:  # newest first; keep order, no repeats
         if a["source"] not in outlets:
             outlets.append(a["source"])
-    logos = [f'<img src="{logo_file(s)}">' for s in outlets[:3] if logo_file(s)]
+    logos = [logo_html(s) for s in outlets[:3]]
     if len(outlets) > 3:
-        logos.append(f'<div class="more">+{len(outlets) - 3}</div>')
-    names = SOURCES[outlets[0]][0] if len(outlets) == 1 else \
-        (", " if lang == "fr" else "، ").join(SOURCES[s][0] for s in outlets[:3])
+        logos.append(f'<div class="logo more">+{len(outlets) - 3}</div>')
 
     photo, photo_src = pick_photo(story)
     now = dt.datetime.now(ALGIERS)
@@ -461,7 +466,7 @@ def render_card(post: dict, story: list[dict], lang: str, out_jpg: Path) -> None
         lang=lang, dir="rtl" if lang == "ar" else "ltr",
         photo_tag=f'<img class="photo" src="{photo.name}">' if photo else "",
         photo_class="" if photo else "nophoto", focus="50% 30%",
-        logos="".join(logos), names=esc(names),
+        logos="".join(logos),
         headline=esc(post["headline"]), subline=esc(post.get("subline", "")),
         section=esc(post["section"]), date=esc(date), credit=esc(credit))
     tmp_html = TEMPLATES / "_render.html"
