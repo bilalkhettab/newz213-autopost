@@ -2,7 +2,7 @@
 
 Posts one carousel to @newz.213 at a time, without anyone in the loop:
 
-1. **News card**: a text card in the page's style (headline, one detail, the papers that reported it, the app icon), in French or Arabic depending on the papers.
+1. **News card**: the article's photo full bleed, the logos of the papers that reported it (up to 3, then +N), the headline as white highlighted blocks, one detail, the section and date, the app icon top corner. French or Arabic depending on the papers. With no usable photo it falls back to the app's green.
 2. **App promo slide**: `public/promo-fr.jpg` or `public/promo-ar.jpg`, the green slide picked on 20 Nov 2026.
 
 A GitHub Actions job runs `autopost.py` every 30 minutes. Most runs post nothing. A run posts only when all of these are true:
@@ -24,7 +24,7 @@ The settings are in `.github/workflows/autopost.yml`. On quiet news days it post
 - **AI use**: one short call to Claude Haiku 5.5 per story it considers (at most 3 per run, usually 1). Without `ANTHROPIC_API_KEY` it falls back to a template that quotes the first paper's headline. The template works but reads like a robot and has no topic check beyond the keyword list, so keep the key.
 - **Cost**: Haiku 5.5 is $0.10 per million input tokens and $0.50 per million output tokens. A call is about 1,500 tokens in and 300 out, so roughly $0.0003 per post, well under a cent a day. GitHub Actions is free for a public repository.
 - **Never posted**: politics, elections, the president, the army, crimes and arrests, court cases, named private people, deaths, accidents, disasters with victims, tensions with other countries (see `BLOCK_PATTERNS` and the `SYSTEM` prompt in `autopost.py`).
-- **Images**: the card is a text card, so no press photo is reused. Images older than 7 days are deleted from `public/` (Instagram keeps its own copy).
+- **Images**: the card reuses the biggest photo among the papers' articles, credited bottom-right ("Photo : TSA"). Press photos belong to the papers, so a paper can ask for a post to be removed; delete it from the app if that happens. Paper logos come from the app (`templates/assets/logos/`). Images older than 7 days are deleted from `public/` (Instagram keeps its own copy).
 
 ## One-time setup
 

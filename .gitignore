@@ -2,3 +2,4 @@
 out/
 templates/_render.*
 __pycache__/
+templates/_photo*

@@ -403,30 +403,67 @@ def esc(s: str) -> str:
     return html.escape(s, quote=True)
 
 
+def pick_photo(story: list[dict]) -> tuple[Path | None, str | None]:
+    """Download the biggest usable photo among the story's articles. Returns (path, outlet name)."""
+    from PIL import Image
+
+    import io
+
+    best = None
+    for i, a in enumerate(story):
+        if not a.get("image"):
+            continue
+        try:
+            im = Image.open(io.BytesIO(http_get(a["image"], timeout=20)))
+            im.load()  # decode now: a broken file is skipped, not rendered
+            w, h = im.size
+        except Exception:
+            continue
+        if w < 600 or h < 400:  # thumbnails look bad at 1080 px
+            continue
+        if best is None or w * h > best[1]:
+            best = (a["source"], w * h, im)
+    if best is None:
+        return None, None
+    out = TEMPLATES / "_photo.jpg"
+    best[2].convert("RGB").save(out, "JPEG", quality=92)
+    return out, SOURCES[best[0]][0]
+
+
+def logo_file(sid: str) -> str | None:
+    for ext in ("svg", "png"):
+        if (TEMPLATES / "assets" / "logos" / f"icon-{sid}.{ext}").exists():
+            return f"assets/logos/icon-{sid}.{ext}"
+    return None
+
+
 def render_card(post: dict, story: list[dict], lang: str, out_jpg: Path) -> None:
     from PIL import Image
 
-    names, chips = [], []
-    for a in story:
-        name, slang, _, color = SOURCES[a["source"]]
-        if name in names:
-            continue
-        names.append(name)
-        label = name if slang == "ar" else name.upper()
-        cls = ' class="ar"' if has_arabic(name) else ""
-        chips.append(f'<span{cls} style="--c:{color}">{esc(label)}</span>')
+    outlets = []
+    for a in story:  # newest first; keep order, no repeats
+        if a["source"] not in outlets:
+            outlets.append(a["source"])
+    logos = [f'<img src="{logo_file(s)}">' for s in outlets[:3] if logo_file(s)]
+    if len(outlets) > 3:
+        logos.append(f'<div class="more">+{len(outlets) - 3}</div>')
+    names = SOURCES[outlets[0]][0] if len(outlets) == 1 else \
+        (", " if lang == "fr" else "، ").join(SOURCES[s][0] for s in outlets[:3])
+
+    photo, photo_src = pick_photo(story)
     now = dt.datetime.now(ALGIERS)
     months_fr = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."]
     months_ar = ["جانفي", "فيفري", "مارس", "أفريل", "ماي", "جوان", "جويلية", "أوت", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
-    date = f"{now.day} {months_fr[now.month - 1]} {now.year}".upper() if lang == "fr" else \
+    date = f"{now.day} {months_fr[now.month - 1]} {now.year}" if lang == "fr" else \
         f"{now.day} {months_ar[now.month - 1]} {now.year}"
+    credit = "" if not photo else (f"Photo : {photo_src}" if lang == "fr" else f"الصورة: {photo_src}")
     page = string.Template((TEMPLATES / "card.html").read_text(encoding="utf-8")).substitute(
-        lang=lang, dir="rtl" if lang == "ar" else "ltr", date=esc(date), section=esc(post["section"]),
+        lang=lang, dir="rtl" if lang == "ar" else "ltr",
+        photo_tag=f'<img class="photo" src="{photo.name}">' if photo else "",
+        photo_class="" if photo else "nophoto", focus="50% 30%",
+        logos="".join(logos), names=esc(names),
         headline=esc(post["headline"]), subline=esc(post.get("subline", "")),
-        sources_label="Selon" if lang == "fr" else "حسب",
-        chips="".join(chips),
-        foot=("Toute la presse algérienne · <b>Newz 213</b>" if lang == "fr"
-              else "كل الصحف الجزائرية · <b>Newz 213</b>"))
+        section=esc(post["section"]), date=esc(date), credit=esc(credit))
     tmp_html = TEMPLATES / "_render.html"
     tmp_png = TEMPLATES / "_render.png"
     tmp_html.write_text(page, encoding="utf-8")
@@ -436,8 +473,8 @@ def render_card(post: dict, story: list[dict], lang: str, out_jpg: Path) -> None
                    check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=120)
     out_jpg.parent.mkdir(parents=True, exist_ok=True)
     Image.open(tmp_png).convert("RGB").save(out_jpg, "JPEG", quality=92)
-    tmp_html.unlink(missing_ok=True)
-    tmp_png.unlink(missing_ok=True)
+    for f in (tmp_html, tmp_png, TEMPLATES / "_photo.jpg"):
+        f.unlink(missing_ok=True)
 
 # ---------------------------------------------------------------- publishing
 
