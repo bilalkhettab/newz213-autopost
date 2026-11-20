@@ -435,7 +435,9 @@ def logo_html(sid: str) -> str:
     d = TEMPLATES / "assets" / "logos"
     for ext in ("svg", "png"):
         if (d / f"wordmark-{sid}.{ext}").exists():
-            return f'<div class="logo"><img src="assets/logos/wordmark-{sid}.{ext}"></div>'
+            bg = {"algerieeco": "#27396B"}.get(sid)  # white logo: show it on the paper's navy
+            style = f' style="background:{bg}"' if bg else ""
+            return f'<div class="logo"{style}><img src="assets/logos/wordmark-{sid}.{ext}"></div>'
     name = SOURCES[sid][0]
     cls = "logo ar" if has_arabic(name) else "logo"
     for ext in ("svg", "png"):
