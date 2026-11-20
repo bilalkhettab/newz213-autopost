@@ -28,19 +28,15 @@ The settings are in `.github/workflows/autopost.yml`. On quiet news days it post
 
 ## One-time setup
 
-### 1. Instagram API access (only you can do this)
+### 1. Instagram API access (done 20 Nov 2026)
 
-The account must be a Professional account (it is). Then:
+New Meta apps can't use "Instagram login" any more. What works is a **system-user token** (never expires):
 
-1. Go to developers.facebook.com, log in, **My Apps → Create app**.
-2. Use case: **Manage messaging & content on Instagram**. App type: Business. Give it a name (for example "Newz 213 autopost").
-3. In the app: **Instagram → API setup with Instagram login**.
-4. Under **Generate access tokens**, click **Add account** and log in as **newz.213**. Accept the permissions `instagram_business_basic` and `instagram_business_content_publish`.
-5. Click **Generate token** next to newz.213. Copy:
-   - the **token** (it starts with `IG...`; it lasts 60 days, and the refresh job renews it), and
-   - the **Instagram user ID** shown next to the account (a long number).
-
-The app can stay in Development mode: it only posts to your own account.
+- Business portfolio **Newz 213 autopost** (id 4161219127518329) owns the Meta app "Newz 213 autopost" (id 1143224305082523) and the Instagram account **@newz.213** (id 17841416781787675).
+- System user **autopost** (Employee) has the app ("Develop app") and @newz.213 ("Content").
+- Token: System users → autopost → Generate token → app "Newz 213 autopost", expiry **Never**, permissions `instagram_basic` + `instagram_content_publish`. The token starts with `EAA`, so the bot calls graph.facebook.com.
+- Business Suite must be opened while signed in with the **Facebook** account. Signed in through Instagram (@ggymapp) it only shows the GGym portfolio.
+- If the token ever leaks: same page → Revoke tokens, generate a new one, replace the `IG_TOKEN` secret.
 
 ### 2. Anthropic API key
 
@@ -57,11 +53,10 @@ In the repository: **Settings → Secrets and variables → Actions → New repo
 | `ANTHROPIC_API_KEY` | the key from step 2 |
 | `IG_USER_ID` | the Instagram user ID from step 1 |
 | `IG_TOKEN` | the token from step 1 |
-| `GH_ADMIN_TOKEN` | a GitHub fine-grained token for this repository only, permission **Secrets: Read and write** (github.com → Settings → Developer settings → Fine-grained tokens). Only used by the token refresh job. |
 
 ### 4. First run
 
-Both jobs are paused until the secrets exist. In the repository, **Actions → autopost → Enable workflow**, and the same for **refresh-instagram-token**. Then **Actions → autopost → Run workflow**, tick **force**, run. Read the log: it says which story it picked or why it posted nothing. After that the schedule takes over.
+Enable **Actions → autopost** (leave **refresh-instagram-token** disabled: the system-user token never expires). Then **Actions → autopost → Run workflow**, tick **force**, run. Read the log: it says which story it picked or why it posted nothing. After that the schedule takes over.
 
 ## Day to day
 
