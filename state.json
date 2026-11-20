@@ -1,5 +1,22 @@
 {
- "posts": [],
+ "posts": [
+  {
+   "at": "2026-11-20T15:12:16.626442+00:00",
+   "key": "f591438923f4",
+   "lang": "fr",
+   "headline": "GNV veut développer le transport de marchandises entre Béjaïa et Sète",
+   "sources": [
+    "algerieeco",
+    "observalgerie"
+   ],
+   "links": [
+    "https://observalgerie.com/2026/11/20/economie/algerie-france-gnv-veut-developper-le-transport-de-marchandises-par-bateau/",
+    "https://algerie-eco.com/2026/11/20/la-compagnie-italienne-gnv-veut-developper-le-transport-de-marchandises-entre-bejaia-et-sete/"
+   ],
+   "writer": "claude",
+   "status": "pending"
+  }
+ ],
  "skipped_links": [
   "https://www.tsa-algerie.com/algerie-les-recommandations-de-la-banque-mondiale-pour-une-croissance-plus-forte/",
   "https://www.tsa-algerie.com/cloud-ia-cybersecurite-djezzy-lance-15-solutions-numeriques-developpees-avec-des-start-up-algeriennes/",
@@ -32,7 +49,15 @@
   "https://www.echoroukonline.com/football-deces-de-larbitre-international-algerien-youcef-gamouh",
   "https://www.dzfoot.com/equipes-nationales/carnet-larbitre-youcef-gamouh-sen-est-alle-302586.html?utm_source=rss_feed&utm_medium=link&utm_campaign=unknown",
   "https://www.echoroukonline.com/%d8%a7%d9%84%d8%ac%d8%b2%d8%a7%d8%a6%d8%b1-%d9%88%d8%af%d9%88%d9%84-%d8%b9%d8%b1%d8%a8%d9%8a%d8%a9-%d9%88%d8%a5%d8%b3%d9%84%d8%a7%d9%85%d9%8a%d8%a9-%d8%aa%d8%b1%d8%ad%d8%a8-%d8%a8%d8%b9%d9%82%d9%88",
-  "https://www.ennaharonline.com/%d9%85%d9%86-%d8%a8%d9%8a%d9%86%d9%87%d8%a7-%d8%a7%d9%84%d8%ac%d8%b2%d8%a7%d8%a6%d8%b1-%d8%af%d9%88%d9%84-%d8%b9%d8%b1%d8%a8%d9%8a%d8%a9-%d9%88%d8%a5%d8%b3%d9%84%d8%a7%d9%85%d9%8a%d8%a9-%d8%aa%d8%b1/"
+  "https://www.ennaharonline.com/%d9%85%d9%86-%d8%a8%d9%8a%d9%86%d9%87%d8%a7-%d8%a7%d9%84%d8%ac%d8%b2%d8%a7%d8%a6%d8%b1-%d8%af%d9%88%d9%84-%d8%b9%d8%b1%d8%a8%d9%8a%d8%a9-%d9%88%d8%a5%d8%b3%d9%84%d8%a7%d9%85%d9%8a%d8%a9-%d8%aa%d8%b1/",
+  "https://www.ennaharonline.com/%d8%a3%d9%88%d8%b3%d9%84%d9%88-%d8%b9%d8%b7%d8%a7%d9%81-%d9%8a%d9%84%d8%aa%d9%82%d9%8a-%d8%a8%d8%b9%d8%af%d8%af-%d9%85%d9%86-%d9%86%d8%b8%d8%b1%d8%a7%d8%a6%d9%87/",
+  "https://www.echoroukonline.com/%d8%a7%d9%84%d8%ac%d8%b2%d8%a7%d8%a6%d8%b1-%d9%88%d9%81%d9%86%d9%84%d9%86%d8%af%d8%a7-%d8%aa%d8%a8%d8%ad%d8%ab%d8%a7%d9%86-%d8%aa%d9%88%d8%b3%d9%8a%d8%b9-%d8%a7%d9%84%d8%b4%d8%b1%d8%a7%d9%83%d8%a9",
+  "https://www.ennaharonline.com/%d8%b9%d8%b7%d8%a7%d9%81-%d9%8a%d8%b4%d8%af%d8%af-%d8%b9%d9%84%d9%89-%d8%b6%d8%b1%d9%88%d8%b1%d8%a9-%d8%a5%d8%ad%d8%af%d8%a7%d8%ab-%d8%a5%d8%b5%d9%84%d8%a7%d8%ad-%d8%b9%d9%85%d9%8a%d9%82-%d9%88%d8%b4/",
+  "https://www.echoroukonline.com/%d8%b9%d8%b7%d8%a7%d9%81-%d9%8a%d8%af%d8%b9%d9%88-%d8%a5%d9%84%d9%89-%d8%a5%d8%b5%d9%84%d8%a7%d8%ad-%d8%b9%d9%85%d9%8a%d9%82-%d9%84%d9%84%d9%86%d8%b8%d8%a7%d9%85-%d8%a7%d9%84%d8%af%d9%88%d9%84%d9%8a",
+  "https://www.ennaharonline.com/%d8%b9%d8%b7%d8%a7%d9%81-%d9%8a%d8%a8%d8%ad%d8%ab-%d9%85%d8%b9-%d9%86%d8%b8%d9%8a%d8%b1%d8%aa%d9%87-%d8%a7%d9%84%d9%81%d9%86%d9%84%d9%86%d8%af%d9%8a%d8%a9-%d8%aa%d8%b1%d9%82%d9%8a%d8%a9-%d8%a7%d9%84/",
+  "https://www.ennaharonline.com/%d8%a3%d9%88%d8%b3%d9%84%d9%88-%d8%a7%d9%84%d8%aa%d8%a3%d9%83%d9%8a%d8%af-%d8%b9%d9%84%d9%89-%d8%a3%d9%87%d9%85%d9%8a%d8%a9-%d8%aa%d9%88%d8%b7%d9%8a%d8%af-%d8%a7%d9%84%d8%b4%d8%b1%d8%a7%d9%83%d8%a9/",
+  "https://www.ennaharonline.com/%d8%b9%d8%b7%d8%a7%d9%81-%d9%8a%d9%8f%d8%ac%d8%b1%d9%89-%d9%84%d9%82%d8%a7%d8%a1-%d8%ab%d9%86%d8%a7%d8%a6%d9%8a%d8%a7-%d9%85%d8%b9-%d9%86%d8%b8%d9%8a%d8%b1%d9%87-%d8%a7%d9%84%d8%ba%d8%a7%d9%86%d9%8a/",
+  "https://www.elbilad.net/national/عطاف-يجري-لقاءات-ثنائية-على-هامش-اجتماع-وزراء-خارجية-إفريقيا-وشمال-أوروبا-146637"
  ],
  "note": "skipped_links seeded 20 Nov 2026 with stories already posted by hand"
 }
