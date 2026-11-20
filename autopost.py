@@ -546,6 +546,12 @@ def main() -> None:
     ap.add_argument("--max-tries", type=int, default=3, help="stories to try per run before giving up")
     args = ap.parse_args()
 
+    if not args.dry_run:
+        missing = [k for k in ("IG_USER_ID", "IG_TOKEN", "PUBLIC_BASE_URL") if not os.environ.get(k)]
+        if missing:
+            print(f"not configured yet (missing {', '.join(missing)}): nothing to do. See README.md, One-time setup.")
+            return
+
     now = dt.datetime.now(dt.timezone.utc)
     state = load_state()
     ok, why = schedule_ok(state, now, args.force or args.dry_run)
