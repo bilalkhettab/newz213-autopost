@@ -1,0 +1,4 @@
+.venv/
+out/
+templates/_render.*
+__pycache__/

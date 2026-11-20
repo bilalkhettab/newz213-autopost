@@ -1,0 +1,79 @@
+# Newz 213 autopost
+
+Posts one carousel to @newz.213 at a time, without anyone in the loop:
+
+1. **News card**: a text card in the page's style (headline, one detail, the papers that reported it, the app icon), in French or Arabic depending on the papers.
+2. **App promo slide**: `public/promo-fr.jpg` or `public/promo-ar.jpg`, the green slide picked on 20 Nov 2026.
+
+A GitHub Actions job runs `autopost.py` every 30 minutes. Most runs post nothing. A run posts only when all of these are true:
+
+| Rule | Default | Setting |
+|---|---|---|
+| Fewer than 10 posts today (Algiers time) | 10 | `DAILY_CAP` |
+| Last post more than 90 minutes ago | 90 | `MIN_GAP_MIN` |
+| Between 07:00 and 23:00 Algiers time | 7 to 23 | `ACTIVE_FROM`, `ACTIVE_TO` |
+| A new story reported by at least 2 papers in the last 14 hours | 2 | `MIN_OUTLETS` |
+| The story passes the keyword blocklist and the model's own check | | `BLOCK_PATTERNS` in `autopost.py` |
+
+The settings are in `.github/workflows/autopost.yml`. On quiet news days it posts fewer than 10: it never posts a single-paper story unless you set `MIN_OUTLETS: "1"`.
+
+## How a run works
+
+`fetch 12 RSS feeds → group same-story articles (port of the app's StoryClusterer) → keep new stories with 2+ papers → blocklist → Claude Haiku 5.5 writes headline, detail, caption and can refuse → render the card (headless Chrome) → commit the JPEG to public/ → Instagram API publishes the carousel → record it in state.json`
+
+- **AI use**: one short call to Claude Haiku 5.5 per story it considers (at most 3 per run, usually 1). Without `ANTHROPIC_API_KEY` it falls back to a template that quotes the first paper's headline. The template works but reads like a robot and has no topic check beyond the keyword list, so keep the key.
+- **Cost**: Haiku 5.5 is $0.10 per million input tokens and $0.50 per million output tokens. A call is about 1,500 tokens in and 300 out, so roughly $0.0003 per post, well under a cent a day. GitHub Actions is free for a public repository.
+- **Never posted**: politics, elections, the president, the army, crimes and arrests, court cases, named private people, deaths, accidents, disasters with victims, tensions with other countries (see `BLOCK_PATTERNS` and the `SYSTEM` prompt in `autopost.py`).
+- **Images**: the card is a text card, so no press photo is reused. Images older than 7 days are deleted from `public/` (Instagram keeps its own copy).
+
+## One-time setup
+
+### 1. Instagram API access (only you can do this)
+
+The account must be a Professional account (it is). Then:
+
+1. Go to developers.facebook.com, log in, **My Apps → Create app**.
+2. Use case: **Manage messaging & content on Instagram**. App type: Business. Give it a name (for example "Newz 213 autopost").
+3. In the app: **Instagram → API setup with Instagram login**.
+4. Under **Generate access tokens**, click **Add account** and log in as **newz.213**. Accept the permissions `instagram_business_basic` and `instagram_business_content_publish`.
+5. Click **Generate token** next to newz.213. Copy:
+   - the **token** (it starts with `IG...`; it lasts 60 days, and the refresh job renews it), and
+   - the **Instagram user ID** shown next to the account (a long number).
+
+The app can stay in Development mode: it only posts to your own account.
+
+### 2. Anthropic API key
+
+console.anthropic.com → **API keys → Create key**. Add a few dollars of credit under Billing; at this volume that lasts months.
+
+### 3. GitHub repository and secrets
+
+The repository must be **public** so Instagram can fetch the images from `raw.githubusercontent.com` (everything in it ends up on Instagram anyway; the keys stay in encrypted secrets, never in the code).
+
+In the repository: **Settings → Secrets and variables → Actions → New repository secret**:
+
+| Secret | Value |
+|---|---|
+| `ANTHROPIC_API_KEY` | the key from step 2 |
+| `IG_USER_ID` | the Instagram user ID from step 1 |
+| `IG_TOKEN` | the token from step 1 |
+| `GH_ADMIN_TOKEN` | a GitHub fine-grained token for this repository only, permission **Secrets: Read and write** (github.com → Settings → Developer settings → Fine-grained tokens). Only used by the token refresh job. |
+
+### 4. First run
+
+**Actions → autopost → Run workflow**, tick **force**, run. Read the log: it says which story it picked or why it posted nothing. After that the schedule takes over.
+
+## Day to day
+
+- **Pause**: Actions → autopost → **Disable workflow**. Enable it again to resume.
+- **Post right now**: Run workflow with **force** (the daily cap still applies).
+- **What was posted**: `state.json` lists every post with its headline, sources and Instagram media ID.
+- **Test locally without posting**: `python autopost.py --dry-run` writes cards and captions to `out/`.
+- **Change the look**: `templates/card.html`. The promo slides come from `../brand/promo-slide/`.
+
+## Limits to know
+
+- Meta allows about 50 posts per 24 hours through the API; 10 a day is well below that.
+- GitHub may start scheduled runs a few minutes late; the 90-minute gap absorbs that.
+- Alt text is not set through the API; Instagram generates its own.
+- The model can still get a fact wrong. Every caption names its sources; check the page from time to time and delete anything wrong from the app.

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="$lang" dir="$dir"><head><meta charset="utf-8"><title>Newz 213 card</title>
+<style>
+@font-face{font-family:'Archivo';src:url(assets/fonts/Archivo-Bold.ttf);font-weight:700}
+@font-face{font-family:'Archivo';src:url(assets/fonts/Archivo-Regular.ttf);font-weight:400}
+@font-face{font-family:'Kufi';src:url(assets/fonts/NotoKufiArabic-ExtraBold.ttf)}
+@font-face{font-family:'Plex';src:url(assets/fonts/IBMPlexSansArabic-Medium.ttf)}
+*{box-sizing:border-box;margin:0}
+body{width:1080px;height:1350px;overflow:hidden;background:#F4F2EE;color:#111;font-family:'Archivo',sans-serif;position:relative}
+body.ar{font-family:'Plex',sans-serif}
+.top{position:absolute;left:80px;right:80px;top:72px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:20px}
+.brand img{width:84px;height:84px;border-radius:19px;box-shadow:0 3px 14px rgba(0,0,0,.12)}
+.brand span{font-family:'Archivo';font-weight:700;font-size:34px;direction:ltr}
+.date{font:700 22px/1 ui-monospace,Menlo,'DejaVu Sans Mono',monospace;letter-spacing:.1em;color:#8A867E;direction:ltr}
+body.ar .date{direction:rtl;font-family:'Plex';letter-spacing:0;font-size:26px}
+.rule{position:absolute;left:80px;right:80px;top:196px;height:3px;background:#111}
+main{position:absolute;left:80px;right:80px;top:250px;bottom:330px;display:flex;flex-direction:column;justify-content:center}
+.section{font:700 24px/1 ui-monospace,Menlo,'DejaVu Sans Mono',monospace;letter-spacing:.14em;color:#006233;text-transform:uppercase}
+body.ar .section{font-family:'Plex';letter-spacing:0;font-size:30px}
+h1{margin-top:30px;font-weight:700;font-size:96px;line-height:1.06;letter-spacing:-.02em}
+body.ar h1{font-family:'Kufi';font-weight:400;letter-spacing:0;line-height:1.45}
+.sub{margin-top:30px;font-size:38px;line-height:1.38;color:#4a4740}
+body.ar .sub{line-height:1.6}
+.sources{position:absolute;left:80px;right:80px;bottom:150px}
+.sources .label{font:700 20px/1 ui-monospace,Menlo,'DejaVu Sans Mono',monospace;letter-spacing:.12em;color:#8A867E;text-transform:uppercase}
+body.ar .sources .label{font-family:'Plex';letter-spacing:0;font-size:26px}
+.chips{margin-top:18px;display:flex;flex-wrap:wrap;gap:12px}
+.chips span{font:700 24px/1 ui-monospace,Menlo,'DejaVu Sans Mono',monospace;letter-spacing:.08em;padding:13px 16px;border-radius:8px;background:#fff;border:2px solid var(--c);color:var(--c)}
+.chips span.ar{font-family:'Kufi';letter-spacing:0;font-size:25px;padding:7px 16px 11px}
+.foot{position:absolute;left:80px;right:80px;bottom:64px;font-size:26px;color:#8A867E}
+.foot b{color:#006233}
+</style></head>
+<body class="$lang">
+<div class="top"><div class="brand"><img src="assets/app-icon.png"><span>Newz 213</span></div><div class="date">$date</div></div>
+<div class="rule"></div>
+<main><div class="section">$section</div><h1 id="h">$headline</h1><div class="sub">$subline</div></main>
+<div class="sources"><div class="label">$sources_label</div><div class="chips">$chips</div></div>
+<div class="foot">$foot</div>
+<script>
+// Shrink the headline until the text block fits.
+const m=document.querySelector('main'), h=document.getElementById('h');
+let s=parseFloat(getComputedStyle(h).fontSize);
+while(m.scrollHeight>m.clientHeight && s>52){s-=4;h.style.fontSize=s+'px';}
+</script>
+</body></html>
