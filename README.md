@@ -61,7 +61,7 @@ In the repository: **Settings → Secrets and variables → Actions → New repo
 
 ### 4. First run
 
-**Actions → autopost → Run workflow**, tick **force**, run. Read the log: it says which story it picked or why it posted nothing. After that the schedule takes over.
+Both jobs are paused until the secrets exist. In the repository, **Actions → autopost → Enable workflow**, and the same for **refresh-instagram-token**. Then **Actions → autopost → Run workflow**, tick **force**, run. Read the log: it says which story it picked or why it posted nothing. After that the schedule takes over.
 
 ## Day to day
 
