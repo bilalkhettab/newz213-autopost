@@ -1,7 +1,7 @@
 name: autopost
 on:
   schedule:
-    - cron: "5,35 * * * *"   # every 30 minutes; the script decides whether to post
+    - cron: "7,37 * * * *"   # every 30 minutes (off the busy :00); the script decides whether to post
   workflow_dispatch:
     inputs:
       force:
