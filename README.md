@@ -16,7 +16,7 @@ A GitHub Actions job runs `autopost.py` every 30 minutes. GitHub's own schedule 
 | A new story from at least 1 paper in the last 24 hours (stories covered by more papers go first) | 1, 24 | `MIN_OUTLETS`, `MAX_AGE_H` |
 | The story passes the keyword blocklist and the model's own check | | `BLOCK_PATTERNS` in `autopost.py` |
 
-Since 21 Nov 2026 the goal is to use Meta's whole API limit (user's choice). For fixed peak-time slots instead, set `POST_SLOTS` (e.g. `"12:30,13:15,18:30,20:00"`) and `DAILY_CAP: "10"`: one post per slot.
+**21 Nov 2026: do not chase Meta's 100/day limit.** At about 6 posts an hour (13 in two hours) Meta blocked publishing (`action is blocked`, error 2207051) and restricted the business portfolio for "automation". The 100 is a technical ceiling, not a safe pace for a new account. Default now: 5 posts a day at fixed peak slots, stories from 2+ papers. For fixed peak-time slots instead, set `POST_SLOTS` (e.g. `"12:30,13:15,18:30,20:00"`) and `DAILY_CAP: "10"`: one post per slot.
 
 The settings are in `.github/workflows/autopost.yml`. On quiet news days it posts fewer than 10: it never posts a single-paper story unless you set `MIN_OUTLETS: "1"`.
 

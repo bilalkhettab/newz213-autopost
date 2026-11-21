@@ -30,13 +30,12 @@ jobs:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           PUBLIC_BASE_URL: https://raw.githubusercontent.com/${{ github.repository }}/main/public
-          # Fill Meta's 100-a-day API limit (user, 21 Nov 2026). Meta's live quota is checked before each post.
-          DAILY_CAP: "95"
-          MIN_OUTLETS: "1"
-          MAX_AGE_H: "24"
-          MIN_GAP_MIN: "9"
-          ACTIVE_FROM: "7"
-          ACTIVE_TO: "1"
+          # 21 Nov 2026: ~6 posts/hour got the account blocked ("action is blocked", portfolio restricted
+          # for automation). Keep it human-paced: a few posts a day at peak times, 2+ papers per story.
+          DAILY_CAP: "5"
+          MIN_OUTLETS: "2"
+          MAX_AGE_H: "14"
           QUOTA_MARGIN: "3"
-          POST_SLOTS: ""
+          POST_SLOTS: "12:45,18:30,20:00,21:15,22:30"
+          SLOT_WINDOW_MIN: "40"
         run: python autopost.py ${{ inputs.force && '--force' || '' }}
