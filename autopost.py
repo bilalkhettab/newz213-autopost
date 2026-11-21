@@ -297,6 +297,8 @@ Rules:
 - Use only facts present in the articles. Never invent numbers, names, dates or quotes. If papers disagree, say less.
 - Language: write everything in the language given (fr = French, ar = Modern Standard Arabic as used by Algerian papers).
 - Neutral, factual tone. No question to the reader, no emoji, no em dashes, no "follow us".
+- The reader sees only your text on a photo: never refer to things they can't see (a map, a color code, "the image", "the list below").
+  Weather alerts: say the alert level in words (e.g. "alerte de niveau 1" / "تنبيه من المستوى الأول") and name the wilayas, never "in yellow".
 - Refuse (publish=false) if the story is about: politics, elections, the president, the army, security forces operations,
   crimes or arrests, court cases, named private individuals, deaths, accidents, disasters with victims,
   religion disputes, or tensions with other countries. Also refuse if the articles are too thin to say anything concrete.
