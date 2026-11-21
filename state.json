@@ -107,6 +107,22 @@
    "writer": "claude",
    "status": "published",
    "media_id": "18130656280953073"
+  },
+  {
+   "at": "2026-11-21T10:30:15.468817+00:00",
+   "key": "007d6b2834d5",
+   "lang": "fr",
+   "headline": "La prime sur le marché parallèle des devises s'est accrue en 2025",
+   "sources": [
+    "algerie360",
+    "algerieeco"
+   ],
+   "links": [
+    "https://www.algerie360.com/marche-noir-devises-euro-dollar-20-novembre/",
+    "https://algerie-eco.com/2026/11/20/devises-en-algerie-la-prime-sur-le-marche-parallele-sest-sensiblement-accrue-par-rapport-au-taux-de-change-officiel-en-2025/"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
@@ -163,7 +179,9 @@
   "https://www.tsa-algerie.com/deux-narcotrafiquants-marocains-abattus-par-les-garde-frontieres-algeriens/",
   "https://algeriepatriotique.com/2026/11/21/deux-trafiquants-de-drogue-marocains-abattus-par-lanp-a-la-frontiere-ouest-du-pays/",
   "https://www.elbilad.net/international/موريتانيا-تحبط-تهريب-1-7-طن-من-الكوكايين-146644",
-  "https://www.elkhabar.com/monde/موريتانيا-ضبط-أكبر-كمية-من-كوكايين-الكراك-276417"
+  "https://www.elkhabar.com/monde/موريتانيا-ضبط-أكبر-كمية-من-كوكايين-الكراك-276417",
+  "https://www.echoroukonline.com/aide-au-logement-rural-la-liste-des-communes-concernees-par-la-hausse-a-11-million-de-da-bientot-devoilee",
+  "https://www.algerie360.com/aide-habitat-rural-hausse-tebboune-decret/"
  ],
  "note": "skipped_links seeded 20 Nov 2026 with stories already posted by hand"
 }
