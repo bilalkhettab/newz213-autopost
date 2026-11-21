@@ -234,6 +234,22 @@
    ],
    "writer": "claude",
    "status": "pending"
+  },
+  {
+   "at": "2026-11-21T11:50:17.273889+00:00",
+   "key": "509c6af17cda",
+   "lang": "fr",
+   "headline": "L'Algérie mise sur sa diaspora pour développer le tourisme",
+   "sources": [
+    "algerieeco",
+    "tsa"
+   ],
+   "links": [
+    "https://algerie-eco.com/2026/11/21/tourisme-lalgerie-sollicite-les-investisseurs-de-la-diaspora-pour-developper-le-secteur-et-attirer-8-millions-de-touristes-dici-2029/",
+    "https://www.tsa-algerie.com/tourisme-lalgerie-vise-8-millions-de-visiteurs-en-2029-et-mobilise-sa-diaspora/"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
