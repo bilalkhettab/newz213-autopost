@@ -124,6 +124,20 @@
    "writer": "claude",
    "status": "published",
    "media_id": "18104225897676287"
+  },
+  {
+   "at": "2026-11-21T10:40:15.964586+00:00",
+   "key": "2c809e8d8f87",
+   "lang": "fr",
+   "headline": "Al-Duhail concède son premier revers de la saison sous Djamel Belmadi",
+   "sources": [
+    "dzfoot"
+   ],
+   "links": [
+    "https://www.dzfoot.com/verts-deurope/qatar-ppremier-revers-pour-djamel-belmadi-302645.html?utm_source=rss_feed&utm_medium=link&utm_campaign=unknown"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
@@ -182,7 +196,11 @@
   "https://www.elbilad.net/international/موريتانيا-تحبط-تهريب-1-7-طن-من-الكوكايين-146644",
   "https://www.elkhabar.com/monde/موريتانيا-ضبط-أكبر-كمية-من-كوكايين-الكراك-276417",
   "https://www.echoroukonline.com/aide-au-logement-rural-la-liste-des-communes-concernees-par-la-hausse-a-11-million-de-da-bientot-devoilee",
-  "https://www.algerie360.com/aide-habitat-rural-hausse-tebboune-decret/"
+  "https://www.algerie360.com/aide-habitat-rural-hausse-tebboune-decret/",
+  "https://www.algerie360.com/slimane-hachi-agence-nationale-archeologie/",
+  "https://www.tsa-algerie.com/qui-est-slimane-hachi-le-monsieur-archeologie-nomme-par-tebboune/",
+  "https://www.dzfoot.com/verts-deurope/espagne-luca-zidane-marque-des-points-apres-son-absence-302642.html?utm_source=rss_feed&utm_medium=link&utm_campaign=unknown",
+  "https://www.echoroukonline.com/gaza-six-palestiniens-blesses-dans-de-nouvelles-attaques-israeliennes-malgre-le-cessez-le-feu"
  ],
  "note": "skipped_links seeded 20 Nov 2026 with stories already posted by hand"
 }
