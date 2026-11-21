@@ -30,9 +30,13 @@ jobs:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           PUBLIC_BASE_URL: https://raw.githubusercontent.com/${{ github.repository }}/main/public
-          DAILY_CAP: "10"
-          MIN_OUTLETS: "2"
-          # Algiers times. Peak hours: lunch and evening.
-          POST_SLOTS: "12:30,13:15,14:00,18:30,19:15,20:00,20:45,21:30,22:15,23:00"
-          SLOT_WINDOW_MIN: "40"
+          # Fill Meta's 100-a-day API limit (user, 21 Nov 2026). Meta's live quota is checked before each post.
+          DAILY_CAP: "95"
+          MIN_OUTLETS: "1"
+          MAX_AGE_H: "24"
+          MIN_GAP_MIN: "9"
+          ACTIVE_FROM: "7"
+          ACTIVE_TO: "1"
+          QUOTA_MARGIN: "3"
+          POST_SLOTS: ""
         run: python autopost.py ${{ inputs.force && '--force' || '' }}

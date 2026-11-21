@@ -23,7 +23,7 @@ Environment:
   IG_TOKEN            long-lived Instagram access token
   PUBLIC_BASE_URL     where public/ is served, e.g.
                       https://raw.githubusercontent.com/<owner>/<repo>/main/public
-  DAILY_CAP (10), POST_SLOTS (Algiers times, see DEFAULT_SLOTS), SLOT_WINDOW_MIN (40)
+  DAILY_CAP (95), MIN_GAP_MIN (9), ACTIVE_FROM (7), ACTIVE_TO (1), QUOTA_MARGIN (3); or POST_SLOTS + SLOT_WINDOW_MIN for fixed slots
 """
 from __future__ import annotations
 
@@ -278,7 +278,7 @@ def candidates(stories: list[list[dict]], state: dict, now: dt.datetime) -> list
         outlets = {a["source"] for a in s}
         if len(outlets) < int(os.environ.get("MIN_OUTLETS", 2)):
             continue
-        if (now - s[0]["published"]).total_seconds() > 14 * 3600:  # stale
+        if (now - s[0]["published"]).total_seconds() > float(os.environ.get("MAX_AGE_H", 14)) * 3600:  # stale
             continue
         if any(a["link"] in seen_links for a in s):
             continue
@@ -555,36 +555,57 @@ def save_state(state: dict) -> None:
     STATE.write_text(json.dumps(state, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
-DEFAULT_SLOTS = "12:30,13:15,14:00,18:30,19:15,20:00,20:45,21:30,22:15,23:00"
-
-
 def schedule_ok(state: dict, now: dt.datetime, force: bool) -> tuple[bool, str]:
-    """Post only at fixed peak-time slots (Algiers time), at most once per slot.
+    """Two modes.
 
-    POST_SLOTS lists the slots. A slot stays open for SLOT_WINDOW_MIN minutes, so a trigger
-    that comes a bit late (the Hostinger cron fires at :03 and :33) still catches it. A slot
-    with no suitable story is simply skipped.
+    Interval mode (POST_SLOTS empty, the default since 21 Nov 2026, user: "use the 100 limit"):
+    post whenever the last post is MIN_GAP_MIN old, between ACTIVE_FROM and ACTIVE_TO (Algiers hours,
+    the window may cross midnight), up to DAILY_CAP a day. Meta's own rolling quota is checked too.
+
+    Slot mode (POST_SLOTS = "12:30,13:15,..."): one post per slot, each slot open SLOT_WINDOW_MIN minutes.
     """
-    cap = int(os.environ.get("DAILY_CAP", 10))
-    window = int(os.environ.get("SLOT_WINDOW_MIN", 40))
-    slots = [s.strip() for s in (os.environ.get("POST_SLOTS") or DEFAULT_SLOTS).split(",") if s.strip()]
+    cap = int(os.environ.get("DAILY_CAP", 95))
     local = now.astimezone(ALGIERS)
     today = [p for p in state["posts"] if dt.datetime.fromisoformat(p["at"]).astimezone(ALGIERS).date() == local.date()]
     if len(today) >= cap:
         return False, f"daily cap reached ({len(today)}/{cap})"
     if force:
         return True, "forced"
+    slots = [x.strip() for x in os.environ.get("POST_SLOTS", "").split(",") if x.strip()]
+    if not slots:
+        start, end = int(os.environ.get("ACTIVE_FROM", 7)), int(os.environ.get("ACTIVE_TO", 1))
+        h = local.hour
+        active = (start <= h < end) if start < end else (h >= start or h < end)
+        if not active:
+            return False, f"outside active hours ({local:%H:%M} Algiers, {start:02d}h-{end:02d}h)"
+        gap = float(os.environ.get("MIN_GAP_MIN", 9))
+        if state["posts"]:
+            mins = (now - dt.datetime.fromisoformat(state["posts"][-1]["at"])).total_seconds() / 60
+            if mins < gap:
+                return False, f"last post {mins:.0f} min ago (< {gap:g})"
+        return True, f"{len(today)}/{cap} today"
+    window = int(os.environ.get("SLOT_WINDOW_MIN", 40))
     open_slot = None
-    for s in slots:
-        h, m = map(int, s.split(":"))
-        start = local.replace(hour=h, minute=m, second=0, microsecond=0)
-        if start <= local < start + dt.timedelta(minutes=window):
-            open_slot = start
+    for x in slots:
+        hh, mm = map(int, x.split(":"))
+        st = local.replace(hour=hh, minute=mm, second=0, microsecond=0)
+        if st <= local < st + dt.timedelta(minutes=window):
+            open_slot = st
     if open_slot is None:
         return False, f"no slot open at {local:%H:%M} Algiers (slots: {', '.join(slots)})"
     if state["posts"] and dt.datetime.fromisoformat(state["posts"][-1]["at"]) >= open_slot:
         return False, f"slot {open_slot:%H:%M} already used"
     return True, f"slot {open_slot:%H:%M}, {len(today)}/{cap} today"
+
+
+def quota_left() -> int | None:
+    """Posts Meta still allows in its rolling 24 h window, or None if it can't be read."""
+    try:
+        d = (ig("GET", f"{os.environ['IG_USER_ID']}/content_publishing_limit", fields="config,quota_usage").get("data") or [{}])[0]
+        return int(d.get("config", {}).get("quota_total", 100)) - int(d.get("quota_usage", 0))
+    except Exception as e:
+        print(f"Meta quota: could not read ({e})")
+        return None
 
 
 def log_quota() -> None:
@@ -627,6 +648,12 @@ def main() -> None:
     print(f"schedule: {why}")
     if not ok:
         return
+    if not args.dry_run:
+        left = quota_left()
+        margin = int(os.environ.get("QUOTA_MARGIN", 3))
+        print(f"Meta quota: {left} posts left in the rolling 24 h (keeping {margin} spare)")
+        if left is not None and left <= margin:
+            return
 
     arts = fetch_articles()
     stories = cluster(arts)
