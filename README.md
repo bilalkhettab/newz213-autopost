@@ -69,6 +69,6 @@ Enable **Actions → autopost** (leave **refresh-instagram-token** disabled: the
 ## Limits to know
 
 - Meta allows about 50 posts per 24 hours through the API; 10 a day is well below that.
-- GitHub may start scheduled runs a few minutes late; the 90-minute gap absorbs that.
+- GitHub's own schedule is unreliable (on 20–21 Nov 2026 it skipped almost every slot). The real trigger is a **Hostinger cron job** (account u369108729, job uid `QfjNmAEbZq`, at :03 and :33) that calls GitHub's `workflow_dispatch` API with a fine-grained token (`newz213-hostinger-cron`, Actions read/write on this repo only, no expiry). The token sits in `/home/u369108729/newz213-github.txt` as one line `Authorization: Bearer …`, outside any website folder. The GitHub schedule stays on as a backup; the gap rule prevents double posts. If the token is revoked, generate a new one and replace that line.
 - Alt text is not set through the API; Instagram generates its own.
 - The model can still get a fact wrong. Every caption names its sources; check the page from time to time and delete anything wrong from the app.
