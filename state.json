@@ -188,6 +188,20 @@
    "writer": "claude",
    "status": "published",
    "media_id": "18101209334105892"
+  },
+  {
+   "at": "2026-11-21T11:20:20.077539+00:00",
+   "key": "eb85285ae574",
+   "lang": "ar",
+   "headline": "وزيرة التكوين تجري لقاءات ثنائية لتطوير الشراكات في التكوين المهني",
+   "sources": [
+    "ennahar"
+   ],
+   "links": [
+    "https://www.ennaharonline.com/%d8%a3%d8%b1%d8%ad%d8%a7%d8%a8-%d8%aa%d8%ac%d8%b1%d9%8a-%d9%84%d9%82%d8%a7%d8%a1%d8%a7%d8%aa-%d8%ab%d9%86%d8%a7%d8%a6%d9%8a%d8%a9-%d9%84%d8%aa%d8%b7%d9%88%d9%8a%d8%b1-%d8%a7%d9%84%d8%b4%d8%b1%d8%a7/"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
@@ -251,7 +265,9 @@
   "https://www.tsa-algerie.com/qui-est-slimane-hachi-le-monsieur-archeologie-nomme-par-tebboune/",
   "https://www.dzfoot.com/verts-deurope/espagne-luca-zidane-marque-des-points-apres-son-absence-302642.html?utm_source=rss_feed&utm_medium=link&utm_campaign=unknown",
   "https://www.echoroukonline.com/gaza-six-palestiniens-blesses-dans-de-nouvelles-attaques-israeliennes-malgre-le-cessez-le-feu",
-  "https://www.dzfoot.com/verts-deurope/angleterre-belloumi-enfin-debarrasse-de-ses-pepins-physiques-302650.html?utm_source=rss_feed&utm_medium=link&utm_campaign=unknown"
+  "https://www.dzfoot.com/verts-deurope/angleterre-belloumi-enfin-debarrasse-de-ses-pepins-physiques-302650.html?utm_source=rss_feed&utm_medium=link&utm_campaign=unknown",
+  "https://www.awras.com/%d9%87%d9%84-%d8%aa%d8%b8%d8%a7%d9%87%d8%b1-%d9%84%d8%a7%d8%b9%d8%a8%d9%88-%d8%a7%d9%84%d8%ae%d8%b6%d8%b1-%d8%a8%d8%a7%d9%84%d8%a5%d8%b5%d8%a7%d8%a8%d8%a9-%d9%84%d8%aa%d9%81%d8%a7%d8%af%d9%8a/",
+  "https://www.ennaharonline.com/%d8%a7%d9%86%d8%b7%d9%84%d8%a7%d9%82-%d8%a7%d9%84%d8%aa%d9%83%d9%88%d9%8a%d9%86-%d9%84%d9%81%d8%a7%d8%a6%d8%af%d8%a9-%d8%a7%d9%84%d8%b7%d9%84%d8%a8%d8%a9-%d8%a7%d9%84%d9%85%d8%ad%d8%a7%d9%85%d9%8a/"
  ],
  "note": "skipped_links seeded 20 Nov 2026 with stories already posted by hand"
 }
