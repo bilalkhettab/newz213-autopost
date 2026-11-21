@@ -171,6 +171,22 @@
    "writer": "claude",
    "status": "published",
    "media_id": "17969218413208716"
+  },
+  {
+   "at": "2026-11-21T11:10:15.195469+00:00",
+   "key": "fec6d927b0e6",
+   "lang": "ar",
+   "headline": "أوبرا الجزائر تحتضن العرض الشرفي الأول لفيلم \"الجزائر إلى الأبد 2\"",
+   "sources": [
+    "elbilad",
+    "ennahar"
+   ],
+   "links": [
+    "https://www.elbilad.net/culture/أوبرا-الجزائر-تحتضن-العرض-الشرفي-الأول-لفيلم-الجزائر-إلى-الأبد-2-spy-eyes-146645",
+    "https://www.ennaharonline.com/%d8%a7%d9%84%d8%b9%d8%b1%d8%b6-%d8%a7%d9%84%d8%a3%d9%88%d9%84-%d9%84%d9%81%d9%8a%d9%84%d9%85-%d8%a7%d9%84%d8%ac%d8%b2%d8%a7%d8%a6%d8%b1-%d8%a5%d9%84%d9%89-%d8%a7%d9%84%d8%a3%d8%a8%d8%af-2/"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
