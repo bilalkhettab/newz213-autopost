@@ -156,6 +156,20 @@
    "writer": "claude",
    "status": "published",
    "media_id": "17977776921160974"
+  },
+  {
+   "at": "2026-11-21T11:00:16.624807+00:00",
+   "key": "9173882746f6",
+   "lang": "ar",
+   "headline": "ميناء بجاية يعرض قدراته اللوجستية ومشاريع تحديثه على وفد كندي",
+   "sources": [
+    "echorouk"
+   ],
+   "links": [
+    "https://www.echoroukonline.com/%d9%85%d9%8a%d9%86%d8%a7%d8%a1-%d8%a8%d8%ac%d8%a7%d9%8a%d8%a9-%d9%8a%d8%b9%d8%b1%d8%b6-%d9%82%d8%af%d8%b1%d8%a7%d8%aa%d9%87-%d8%a7%d9%84%d9%84%d9%88%d8%ac%d8%b3%d8%aa%d9%8a%d8%a9-%d9%88%d9%85%d8%b4"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
@@ -218,7 +232,8 @@
   "https://www.algerie360.com/slimane-hachi-agence-nationale-archeologie/",
   "https://www.tsa-algerie.com/qui-est-slimane-hachi-le-monsieur-archeologie-nomme-par-tebboune/",
   "https://www.dzfoot.com/verts-deurope/espagne-luca-zidane-marque-des-points-apres-son-absence-302642.html?utm_source=rss_feed&utm_medium=link&utm_campaign=unknown",
-  "https://www.echoroukonline.com/gaza-six-palestiniens-blesses-dans-de-nouvelles-attaques-israeliennes-malgre-le-cessez-le-feu"
+  "https://www.echoroukonline.com/gaza-six-palestiniens-blesses-dans-de-nouvelles-attaques-israeliennes-malgre-le-cessez-le-feu",
+  "https://www.dzfoot.com/verts-deurope/angleterre-belloumi-enfin-debarrasse-de-ses-pepins-physiques-302650.html?utm_source=rss_feed&utm_medium=link&utm_campaign=unknown"
  ],
  "note": "skipped_links seeded 20 Nov 2026 with stories already posted by hand"
 }
