@@ -139,6 +139,22 @@
    "writer": "claude",
    "status": "published",
    "media_id": "18131286155490382"
+  },
+  {
+   "at": "2026-11-21T10:50:13.691930+00:00",
+   "key": "c7144c66176e",
+   "lang": "ar",
+   "headline": "صيدال تطلق دواء \"دابافلوكس\" لعلاج السكري من النوع الثاني",
+   "sources": [
+    "awras",
+    "elbilad"
+   ],
+   "links": [
+    "https://www.awras.com/%d8%b5%d9%8a%d8%af%d8%a7%d9%84-%d8%aa%d9%83%d8%b4%d9%81-%d8%b9%d9%86-%d8%af%d9%88%d8%a7%d8%a1-%d8%ac%d8%af%d9%8a%d8%af-%d9%84%d9%85%d9%88%d8%a7%d8%ac%d9%87%d8%a9-%d8%af%d8%a7%d8%a1-%d8%a7%d9%84%d8%b3/",
+    "https://www.elbilad.net/derniere-info/صيدال-تطلق-دواء-جديدا-للتكفل-بمرضى-السكري-146640"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
