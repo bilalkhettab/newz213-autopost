@@ -90,6 +90,22 @@
    "writer": "claude",
    "status": "published",
    "media_id": "18092399021258436"
+  },
+  {
+   "at": "2026-11-21T10:20:16.907103+00:00",
+   "key": "6a2e67e407bf",
+   "lang": "ar",
+   "headline": "منتخب أقل من 17 سنة يواجه تشيلي في افتتاح مونديال قطر",
+   "sources": [
+    "awras",
+    "ennahar"
+   ],
+   "links": [
+    "https://www.ennaharonline.com/%d8%a3%d8%b4%d8%a8%d8%a7%d9%84-%d8%a7%d9%84%d8%ae%d8%b6%d8%b1-%d9%8a%d8%a8%d8%ad%d8%ab%d9%88%d9%86-%d8%b9%d9%86-%d8%a7%d9%86%d8%b7%d9%84%d8%a7%d9%82%d8%a9-%d9%85%d8%ab%d8%a7%d9%84%d9%8a%d8%a9/",
+    "https://www.awras.com/%d9%85%d9%88%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%a8%d8%a7%d8%b1%d8%a7%d8%a9-%d8%a7%d9%84%d8%a7%d9%81%d8%aa%d8%aa%d8%a7%d8%ad%d9%8a%d8%a9-%d9%84%d8%a3%d8%b4%d8%a8%d8%a7%d9%84-%d8%a7%d9%84%d8%ae%d8%b6/"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
@@ -141,7 +157,12 @@
   "https://www.elkhabar.com/nation/القضاء-على-مهربين-مغربيين-قرب-الحدود-276418",
   "https://www.echoroukonline.com/%d8%a7%d9%84%d9%86%d8%b9%d8%a7%d9%85%d8%a9-%d8%a7%d9%84%d9%82%d8%b6%d8%a7%d8%a1-%d8%b9%d9%84%d9%89-%d9%85%d9%87%d8%b1%d8%a8%d9%8a%d9%86-%d9%85%d8%ba%d8%b1%d8%a8%d9%8a%d9%8a%d9%86-%d9%88%d8%a5%d8%ad",
   "https://www.ennaharonline.com/%d8%a7%d9%84%d9%82%d8%b6%d8%a7%d8%a1-%d8%b9%d9%84%d9%89-%d9%85%d9%87%d8%b1%d8%a8%d9%8a%d9%86-%d8%a7%d8%ab%d9%86%d9%8a%d9%86-%d9%85%d9%86-%d8%ac%d9%86%d8%b3%d9%8a%d8%a9-%d9%85%d8%ba%d8%b1%d8%a8%d9%8a/",
-  "https://www.elbilad.net/national/الجيش-يقضي-على-مهربين-مغربيين-ويحبط-إدخال-أكثر-من-50-كلغ-من-المخدرات-146643"
+  "https://www.elbilad.net/national/الجيش-يقضي-على-مهربين-مغربيين-ويحبط-إدخال-أكثر-من-50-كلغ-من-المخدرات-146643",
+  "https://algeriepatriotique.com/2026/11/21/tolerance-zero-2/",
+  "https://www.tsa-algerie.com/deux-narcotrafiquants-marocains-abattus-par-les-garde-frontieres-algeriens/",
+  "https://algeriepatriotique.com/2026/11/21/deux-trafiquants-de-drogue-marocains-abattus-par-lanp-a-la-frontiere-ouest-du-pays/",
+  "https://www.elbilad.net/international/موريتانيا-تحبط-تهريب-1-7-طن-من-الكوكايين-146644",
+  "https://www.elkhabar.com/monde/موريتانيا-ضبط-أكبر-كمية-من-كوكايين-الكراك-276417"
  ],
  "note": "skipped_links seeded 20 Nov 2026 with stories already posted by hand"
 }
