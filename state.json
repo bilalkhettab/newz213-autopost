@@ -203,6 +203,22 @@
    "writer": "claude",
    "status": "published",
    "media_id": "18001627065047928"
+  },
+  {
+   "at": "2026-11-21T11:30:19.535221+00:00",
+   "key": "2dc34097f170",
+   "lang": "ar",
+   "headline": "شباب بلوزداد يحل بنواكشوط استعدادا لمواجهة نادي الجمارك",
+   "sources": [
+    "echorouk",
+    "ennahar"
+   ],
+   "links": [
+    "https://www.echoroukonline.com/%d8%b4%d8%a8%d8%a7%d8%a8-%d8%a8%d9%84%d9%88%d8%b2%d8%af%d8%a7%d8%af-%d9%8a%d8%ad%d9%84-%d8%a8%d9%85%d9%88%d8%b1%d9%8a%d8%aa%d8%a7%d9%86%d9%8a%d8%a7-%d8%aa%d8%ad%d8%b3%d8%a8%d8%a7-%d9%84%d9%85%d9%88",
+    "https://www.ennaharonline.com/%d8%b4%d8%a8%d8%a7%d8%a8-%d8%a8%d9%84%d9%88%d8%b2%d8%af%d8%a7%d8%af-%d9%8a%d8%ad%d9%84-%d8%a8%d9%86%d9%88%d8%a7%d9%83%d8%b4%d9%88%d8%b7-%d9%84%d8%ae%d9%88%d8%b6-%d8%ba%d9%85%d8%a7%d8%b1-%d8%a7%d9%84/"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
