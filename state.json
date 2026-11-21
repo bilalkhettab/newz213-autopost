@@ -220,6 +220,20 @@
    "writer": "claude",
    "status": "published",
    "media_id": "18121974454990912"
+  },
+  {
+   "at": "2026-11-21T11:40:19.063270+00:00",
+   "key": "b2b61bcad384",
+   "lang": "fr",
+   "headline": "Saidal lance DAPAFLUX, un médicament contre le diabète de type 2",
+   "sources": [
+    "algerie360"
+   ],
+   "links": [
+    "https://www.algerie360.com/saidal-dapaflux-diabete-type-2/"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
