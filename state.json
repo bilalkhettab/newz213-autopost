@@ -33,6 +33,24 @@
    "writer": "claude",
    "status": "published",
    "media_id": "18041236691847792"
+  },
+  {
+   "at": "2026-11-21T08:03:26.599928+00:00",
+   "key": "ca9662febc3e",
+   "lang": "ar",
+   "headline": "صيدال تطلق دواء دابافلوكس لعلاج السكري من النوع الثاني",
+   "sources": [
+    "echorouk",
+    "elkhabar",
+    "ennahar"
+   ],
+   "links": [
+    "https://www.echoroukonline.com/%d8%af%d8%a7%d8%a8%d8%a7%d9%81%d9%84%d9%88%d9%83%d8%b3-%d8%af%d9%88%d8%a7%d8%a1-%d8%ac%d8%af%d9%8a%d8%af-%d9%85%d9%86-%d8%b5%d9%8a%d8%af%d8%a7%d9%84-%d9%8a%d8%b3%d8%aa%d9%87%d8%af%d9%81-%d8%a7",
+    "https://www.ennaharonline.com/%d8%b5%d9%8a%d8%af%d8%a7%d9%84-%d8%aa%d8%b7%d9%84%d9%82-%d8%af%d9%88%d8%a7%d8%a1-%d8%ac%d8%af%d9%8a%d8%af%d8%a7-%d9%84%d9%85%d8%b1%d8%b6%d9%89-%d8%a7%d9%84%d8%b3%d9%83%d8%b1%d9%8a/",
+    "https://www.elkhabar.com/sante/صيدال-يطلق-دواء-مبتكرا-جديدا-276415"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
