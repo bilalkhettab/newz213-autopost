@@ -52,6 +52,24 @@
    "writer": "claude",
    "status": "published",
    "media_id": "18086970749706000"
+  },
+  {
+   "at": "2026-11-21T10:00:12.015993+00:00",
+   "key": "98365db4afbe",
+   "lang": "ar",
+   "headline": "تنبيه من رياح قوية يوم الأحد عبر عدة ولايات",
+   "sources": [
+    "echorouk",
+    "elkhabar",
+    "ennahar"
+   ],
+   "links": [
+    "https://www.ennaharonline.com/%d8%b1%d9%8a%d8%a7%d8%ad-%d9%82%d9%88%d9%8a%d8%a9-%d8%aa%d8%ac%d8%aa%d8%a7%d8%ad-%d8%b9%d8%af%d8%a9-%d9%88%d9%84%d8%a7%d9%8a%d8%a7%d8%aa-%d8%ba%d8%af%d8%a7-%d8%a7%d9%84%d8%a3%d8%ad%d8%af/",
+    "https://www.elkhabar.com/societe/رياح-قوية-على-هذه-الولايات-276416",
+    "https://www.echoroukonline.com/%d8%aa%d9%86%d8%a8%d9%8a%d9%87-%d8%b1%d9%8a%d8%a7%d8%ad-%d9%82%d9%88%d9%8a%d8%a9-%d9%88%d8%a3%d9%85%d9%88%d8%a7%d8%ac-%d8%b9%d8%a7%d9%84%d9%8a%d8%a9-%d8%b9%d8%a8%d8%b1-12-%d9%88%d9%84%d8%a7%d9%8a"
+   ],
+   "writer": "claude",
+   "status": "pending"
   }
  ],
  "skipped_links": [
@@ -98,7 +116,12 @@
   "https://www.awras.com/%d8%a7%d9%84%d8%ac%d8%b2%d8%a7%d8%a6%d8%b1-%d8%aa%d9%81%d9%88%d8%b2-%d8%a8%d8%b9%d8%b6%d9%88%d9%8a%d8%a9-%d8%a7%d9%84%d9%84%d8%ac%d9%86%d8%a9-%d8%a7%d9%84%d8%a5%d9%86%d8%b3%d8%a7%d9%86%d9%8a%d8%a9/",
   "https://www.ennaharonline.com/%d8%a5%d8%b9%d8%a7%d8%af%d8%a9-%d8%a7%d9%86%d8%aa%d8%ae%d8%a7%d8%a8-%d8%a7%d9%84%d8%ac%d8%b2%d8%a7%d8%a6%d8%b1-%d8%b9%d8%b6%d9%88%d8%a7-%d9%81%d9%8a-%d8%a7%d9%84%d9%84%d8%ac%d9%86%d8%a9-%d8%a7%d9%84/",
   "https://www.echoroukonline.com/%d8%a5%d8%b9%d8%a7%d8%af%d8%a9-%d8%a7%d9%86%d8%aa%d8%ae%d8%a7%d8%a8-%d8%a7%d9%84%d8%ac%d8%b2%d8%a7%d8%a6%d8%b1-%d8%b9%d8%b6%d9%88%d8%a7-%d9%81%d9%8a-%d8%a7%d9%84%d9%84%d8%ac%d9%86%d8%a9-%d8%a7%d9%84",
-  "https://www.elkhabar.com/nation/إعادة-انتخاب-الجزائر-في-لجنة-تقصي-الحقائق-الدولية-276410"
+  "https://www.elkhabar.com/nation/إعادة-انتخاب-الجزائر-في-لجنة-تقصي-الحقائق-الدولية-276410",
+  "https://www.awras.com/%d8%a7%d9%84%d9%82%d8%b6%d8%a7%d8%a1-%d8%b9%d9%84%d9%89-%d9%85%d9%87%d8%b1%d8%a8%d9%8a%d9%86-%d9%85%d8%ba%d8%b1%d8%a8%d9%8a%d9%8a%d9%86-%d8%ad%d8%a7%d9%88%d9%84%d8%a7-%d8%a5%d8%af%d8%ae%d8%a7%d9%84/",
+  "https://www.elkhabar.com/nation/القضاء-على-مهربين-مغربيين-قرب-الحدود-276418",
+  "https://www.echoroukonline.com/%d8%a7%d9%84%d9%86%d8%b9%d8%a7%d9%85%d8%a9-%d8%a7%d9%84%d9%82%d8%b6%d8%a7%d8%a1-%d8%b9%d9%84%d9%89-%d9%85%d9%87%d8%b1%d8%a8%d9%8a%d9%86-%d9%85%d8%ba%d8%b1%d8%a8%d9%8a%d9%8a%d9%86-%d9%88%d8%a5%d8%ad",
+  "https://www.ennaharonline.com/%d8%a7%d9%84%d9%82%d8%b6%d8%a7%d8%a1-%d8%b9%d9%84%d9%89-%d9%85%d9%87%d8%b1%d8%a8%d9%8a%d9%86-%d8%a7%d8%ab%d9%86%d9%8a%d9%86-%d9%85%d9%86-%d8%ac%d9%86%d8%b3%d9%8a%d8%a9-%d9%85%d8%ba%d8%b1%d8%a8%d9%8a/",
+  "https://www.elbilad.net/national/الجيش-يقضي-على-مهربين-مغربيين-ويحبط-إدخال-أكثر-من-50-كلغ-من-المخدرات-146643"
  ],
  "note": "skipped_links seeded 20 Nov 2026 with stories already posted by hand"
 }
