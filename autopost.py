@@ -92,6 +92,7 @@ BLOCK_RE = re.compile("|".join(BLOCK_PATTERNS), re.IGNORECASE)
 # ---------------------------------------------------------------- feeds
 
 def http_get(url: str, timeout: int = 20) -> bytes:
+    url = urllib.parse.quote(url, safe=":/?#[]@!$&'()*+,;=%~")  # Arabic file names in image URLs
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read()
@@ -403,26 +404,51 @@ def esc(s: str) -> str:
     return html.escape(s, quote=True)
 
 
+def page_images(url: str) -> list[str]:
+    """og:image / twitter:image of an article page (papers often put a bigger photo there than in the feed)."""
+    try:
+        page = http_get(url, timeout=15)[:400_000].decode("utf-8", errors="ignore")
+    except Exception:
+        return []
+    found = []
+    for m in re.finditer(r'<meta[^>]+(?:property|name)=["\'](?:og:image(?::secure_url)?|twitter:image(?::src)?)["\'][^>]*>', page, re.I):
+        c = re.search(r'content=["\']([^"\']+)', m.group(0))
+        if c:
+            u = html.unescape(c.group(1).strip())
+            u = urllib.parse.urljoin(url, u)
+            if u.startswith("http") and u not in found:
+                found.append(u)
+    return found
+
+
 def pick_photo(story: list[dict]) -> tuple[Path | None, str | None]:
-    """Download the biggest usable photo among the story's articles. Returns (path, outlet name)."""
+    """Download the biggest usable photo among the story's articles: the feed's image first, then the
+    article page's og:image. Returns (path, outlet name), or (None, None): then the story isn't posted."""
     from PIL import Image
 
     import io
 
     best = None
-    for i, a in enumerate(story):
-        if not a.get("image"):
-            continue
-        try:
-            im = Image.open(io.BytesIO(http_get(a["image"], timeout=20)))
-            im.load()  # decode now: a broken file is skipped, not rendered
-            w, h = im.size
-        except Exception:
-            continue
-        if w < 600 or h < 400:  # thumbnails look bad at 1080 px
-            continue
-        if best is None or w * h > best[1]:
-            best = (a["source"], w * h, im)
+    for a in story:
+        urls = [a["image"]] if a.get("image") else []
+        tried_page = False
+        while True:
+            for u in urls:
+                try:
+                    im = Image.open(io.BytesIO(http_get(u, timeout=20)))
+                    im.load()  # decode now: a broken file is skipped, not rendered
+                    w, h = im.size
+                except Exception:
+                    continue
+                if w < 600 or h < 400:  # thumbnails look bad at 1080 px
+                    continue
+                if best is None or w * h > best[1]:
+                    best = (a["source"], w * h, im)
+            ok = best is not None and best[0] == a["source"]
+            if ok or tried_page:
+                break
+            tried_page = True
+            urls = [u for u in page_images(a["link"]) if u not in urls]
     if best is None:
         return None, None
     out = TEMPLATES / "_photo.jpg"
@@ -446,7 +472,7 @@ def logo_html(sid: str) -> str:
     return f'<div class="{cls}">{esc(name)}</div>'
 
 
-def render_card(post: dict, story: list[dict], lang: str, out_jpg: Path) -> None:
+def render_card(post: dict, story: list[dict], lang: str, out_jpg: Path, photo: Path | None = None, photo_src: str | None = None) -> None:
     from PIL import Image
 
     outlets = []
@@ -457,7 +483,8 @@ def render_card(post: dict, story: list[dict], lang: str, out_jpg: Path) -> None
     if len(outlets) > 3:
         logos.append(f'<div class="logo more">+{len(outlets) - 3}</div>')
 
-    photo, photo_src = pick_photo(story)
+    if photo is None:
+        photo, photo_src = pick_photo(story)
     now = dt.datetime.now(ALGIERS)
     months_fr = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."]
     months_ar = ["جانفي", "فيفري", "مارس", "أفريل", "ماي", "جوان", "جويلية", "أوت", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
@@ -673,6 +700,11 @@ def main() -> None:
             print(f"  skipped: blocklist '{kw}'")
             state.setdefault("skipped_links", []).extend(a["link"] for a in story)
             continue
+        photo, photo_src = pick_photo(story)
+        if photo is None:  # no green text-only cards (user, 21 Nov 2026)
+            print("  skipped: no usable photo (feed or article page)")
+            state.setdefault("skipped_links", []).extend(a["link"] for a in story)
+            continue
         tries += 1
         post = write_with_claude(story, lang) if use_ai else write_with_template(story, lang)
         if post is None:
@@ -685,7 +717,7 @@ def main() -> None:
         key = story_key(story)
         day = now.astimezone(ALGIERS).date().isoformat()
         card = (ROOT / "out" if args.dry_run else PUBLIC / day) / f"{key}.jpg"
-        render_card(post, story, lang, card)
+        render_card(post, story, lang, card, photo, photo_src)
         caption = build_caption(post, story, lang)
         print(f"  card: {card.relative_to(ROOT)}\n  headline: {post['headline']}")
 

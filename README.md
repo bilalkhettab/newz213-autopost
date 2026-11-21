@@ -2,7 +2,7 @@
 
 Posts one carousel to @newz.213 at a time, without anyone in the loop:
 
-1. **News card**: the article's photo full bleed, the full logos (wordmarks) of the papers that reported it, in white tags (up to 3, then +N), the headline as white highlighted blocks, one detail, the section and date, the app icon top corner. French or Arabic depending on the papers. With no usable photo it falls back to the app's green.
+1. **News card**: the article's photo full bleed, the full logos (wordmarks) of the papers that reported it, in white tags (up to 3, then +N), the headline as white highlighted blocks, one detail, the section and date, the app icon top corner. French or Arabic depending on the papers. The photo comes from the feed, or from the article page's og:image when the feed has none or a small one. With no usable photo (at least 600×400) the story is skipped: no text-only cards (user, 21 Nov 2026).
 2. **App promo slide**: `public/promo-fr.jpg` or `public/promo-ar.jpg`, the green slide picked on 20 Nov 2026.
 
 A GitHub Actions job runs `autopost.py` every 30 minutes. GitHub's own schedule proved unreliable on this repo (most slots were skipped), so the real trigger is a **Hostinger cron job** (account u369108729, every 5 minutes) that calls GitHub's workflow_dispatch API every 5 minutes. It reads its key from `/home/u369108729/newz213-github.txt` (one line, `Authorization: Bearer <fine-grained token>`, token `newz213-hostinger-cron`: only this repo, Actions read/write, no expiry). GitHub's schedule stays on as a backup. Most runs post nothing. A run posts only when all of these are true:
