@@ -10,8 +10,7 @@ A GitHub Actions job runs `autopost.py` every 30 minutes. GitHub's own schedule 
 | Rule | Default | Setting |
 |---|---|---|
 | Fewer than 10 posts today (Algiers time) | 10 | `DAILY_CAP` |
-| Last post more than 90 minutes ago | 90 | `MIN_GAP_MIN` |
-| Between 07:00 and 23:00 Algiers time | 7 to 23 | `ACTIVE_FROM`, `ACTIVE_TO` |
+| It's a peak-time slot (Algiers time), one post per slot; a slot stays open 40 min so the :03/:33 trigger catches it | 12:30, 13:15, 14:00, 18:30, 19:15, 20:00, 20:45, 21:30, 22:15, 23:00 | `POST_SLOTS`, `SLOT_WINDOW_MIN` |
 | A new story reported by at least 2 papers in the last 14 hours | 2 | `MIN_OUTLETS` |
 | The story passes the keyword blocklist and the model's own check | | `BLOCK_PATTERNS` in `autopost.py` |
 
@@ -68,7 +67,8 @@ Enable **Actions → autopost** (leave **refresh-instagram-token** disabled: the
 
 ## Limits to know
 
-- Meta allows about 50 posts per 24 hours through the API; 10 a day is well below that.
+- Meta caps API publishing at 100 posts per rolling 24 hours (a carousel counts as one). Each run that posts prints the account's real quota from `content_publishing_limit` ("Meta quota: x used of y").
+- The slots are a first guess at when Algerians are on Instagram (lunch, then evening). Once the page has followers, check Insights → Most active times and change `POST_SLOTS`.
 - GitHub's own schedule is unreliable (on 20–21 Nov 2026 it skipped almost every slot). The real trigger is a **Hostinger cron job** (account u369108729, job uid `QfjNmAEbZq`, at :03 and :33) that calls GitHub's `workflow_dispatch` API with a fine-grained token (`newz213-hostinger-cron`, Actions read/write on this repo only, no expiry). The token sits in `/home/u369108729/newz213-github.txt` as one line `Authorization: Bearer …`, outside any website folder. The GitHub schedule stays on as a backup; the gap rule prevents double posts. If the token is revoked, generate a new one and replace that line.
 - Alt text is not set through the API; Instagram generates its own.
 - The model can still get a fact wrong. Every caption names its sources; check the page from time to time and delete anything wrong from the app.
