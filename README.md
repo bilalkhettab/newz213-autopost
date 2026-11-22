@@ -61,6 +61,15 @@ In the repository: **Settings → Secrets and variables → Actions → New repo
 
 Enable **Actions → autopost** (leave **refresh-instagram-token** disabled: the system-user token never expires). Then **Actions → autopost → Run workflow**, tick **force**, run. Read the log: it says which story it picked or why it posted nothing. After that the schedule takes over.
 
+## Manual desk (post by hand)
+
+While the bot is paused, prepare posts on the Mac and post them yourself: double-click `dashboard.command` (or run `.venv/bin/python dashboard.py`), then open http://localhost:8213.
+
+- The left column lists today's stories (same clustering and topic blocklist as the bot), papers count, language, age; posted ones are greyed.
+- **Prepare** picks the photo (feed or article page), writes the text and renders the card. With `ANTHROPIC_API_KEY=...` in the Instagram folder's `.env` it uses Claude Haiku; without it, the paper's own headline.
+- Edit headline, detail line, section or caption, **Re-render card**, **Download** both slides, **Copy caption**, post on Instagram (4:5).
+- **Mark as posted** writes it to `state.json` and pushes, so the bot never repeats it. Files stay in `out/manual/<date>/<story>/`.
+
 ## Day to day
 
 - **Pause**: Actions → autopost → **Disable workflow**. Enable it again to resume.

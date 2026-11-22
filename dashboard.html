@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Newz 213 desk</title>
+<style>
+:root{--bg:#f4f2ee;--panel:#fff;--ink:#111;--muted:#6f6b63;--line:#e3dfd7;--green:#003a0b;--accent:#006233;--chip:#ece9e2;--warn:#a15c00;--warnbg:#fff4e0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111;--panel:#1b1a18;--ink:#f4f2ee;--muted:#9a958c;--line:#2e2c29;--green:#3db97e;--accent:#3db97e;--chip:#24221f;--warn:#f0b35a;--warnbg:#2b2114}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif}
+header{display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:2}
+header h1{font-size:17px;margin:0}
+header .stats{color:var(--muted);font-size:13px}
+header .sp{flex:1}
+button{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button:disabled{opacity:.5;cursor:default}
+.wrap{display:grid;grid-template-columns:minmax(320px,440px) 1fr;height:calc(100vh - 56px)}
+.list{overflow:auto;border-right:1px solid var(--line)}
+.filters{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg)}
+.filters button{padding:4px 10px;font-size:13px}
+.filters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.item{padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.item:hover,.item.sel{background:var(--panel)}
+.item.posted{opacity:.45}
+.item .t{font-weight:600;margin:4px 0}
+.item .t[dir=rtl]{font-family:"Geeza Pro","SF Arabic",sans-serif;font-size:16px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted);align-items:center}
+.chip{background:var(--chip);border-radius:999px;padding:1px 8px}
+.chip.n{background:var(--accent);color:#fff}
+.editor{overflow:auto;padding:20px}
+.empty{color:var(--muted);padding:40px;text-align:center}
+.slides{display:flex;gap:14px;flex-wrap:wrap}
+.slides figure{margin:0;width:min(360px,100%)}
+.slides img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:var(--chip)}
+.slides figcaption{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-top:6px}
+.fields{display:grid;gap:10px;margin-top:18px;max-width:740px}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+textarea{min-height:190px;resize:vertical}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.note{background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 12px;font-size:13px;margin-bottom:12px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+.links a{color:var(--muted);font-size:12px;margin-right:10px}
+@media (max-width:820px){.wrap{grid-template-columns:1fr;height:auto}.list{max-height:45vh}}
+</style></head>
+<body>
+<header><h1>Newz 213 desk</h1><span class="stats" id="stats"></span><span class="sp"></span>
+<button id="refresh">Refresh feeds</button></header>
+<div class="wrap">
+  <div class="list"><div class="filters" id="filters">
+    <button data-f="all" class="on">All</button><button data-f="fr">Français</button><button data-f="ar">العربية</button><button data-f="multi">2+ papers</button>
+  </div><div id="items"><div class="empty">Loading the 12 feeds…</div></div></div>
+  <div class="editor" id="editor"><div class="empty">Pick a story on the left, then “Prepare”.</div></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+let stories=[], sel=null, filter='all';
+const $=s=>document.querySelector(s);
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2200)};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ago=m=>m<60?`${m} min`:`${Math.floor(m/60)} h ${m%60?String(m%60).padStart(2,'0'):''}`.trim();
+async function api(path,body){const r=await fetch(path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});return r.json()}
+
+async function load(refresh){
+  $('#items').innerHTML='<div class="empty">Loading the 12 feeds…</div>';
+  const d=await api('/api/stories'+(refresh?'?refresh=1':''));
+  if(d.error){$('#items').innerHTML=`<div class="empty">${esc(d.error)}</div>`;return}
+  stories=d.stories;
+  const last=d.last_min==null?'none yet':`${ago(d.last_min)} ago`;
+  $('#stats').textContent=`${d.now} Algiers · posted today: ${d.today} · last post: ${last} · writer: ${d.ai?'Claude':'paper headline'}`;
+  draw();
+}
+function draw(){
+  const list=stories.filter(s=>filter==='all'||(filter==='multi'?s.papers>1:s.lang===filter));
+  $('#items').innerHTML=list.map(s=>`<div class="item ${s.posted?'posted':''} ${sel===s.id?'sel':''}" data-id="${s.id}">
+    <div class="meta"><span class="chip ${s.papers>1?'n':''}">${s.papers} paper${s.papers>1?'s':''}</span><span class="chip">${s.lang.toUpperCase()}</span><span>${ago(s.age_min)} ago</span>${s.posted?'<span>· posted</span>':''}${s.prepared&&!s.posted?'<span>· prepared</span>':''}</div>
+    <div class="t" dir="${s.lang==='ar'?'rtl':'ltr'}">${esc(s.title)}</div>
+    <div class="meta">${esc(s.sources.join(' · '))}</div></div>`).join('')||'<div class="empty">No story here.</div>';
+}
+$('#items').onclick=e=>{const it=e.target.closest('.item');if(it)open(it.dataset.id)};
+$('#filters').onclick=e=>{const b=e.target.closest('button');if(!b)return;filter=b.dataset.f;[...$('#filters').children].forEach(x=>x.classList.toggle('on',x===b));draw()};
+$('#refresh').onclick=()=>load(true);
+
+async function open(id){
+  sel=id;draw();const s=stories.find(x=>x.id===id);
+  const p=await api('/api/post?id='+id);
+  if(p&&p.card) return show(p);
+  $('#editor').innerHTML=`<div class="t" dir="${s.lang==='ar'?'rtl':'ltr'}" style="font-size:20px;font-weight:700">${esc(s.title)}</div>
+    <p class="meta">${esc(s.sources.join(' · '))} · ${ago(s.age_min)} ago</p>
+    <p class="links">${s.links.map((l,i)=>`<a href="${esc(l)}" target="_blank">Article ${i+1} ↗</a>`).join('')}</p>
+    <button class="primary" id="prep">Prepare</button>`;
+  $('#prep').onclick=async()=>{$('#prep').disabled=true;$('#prep').textContent='Preparing… (photo, text, card)';
+    const r=await api('/api/prepare',{id});if(r.error){$('#prep').textContent=r.error;return}
+    const s2=stories.find(x=>x.id===id);if(s2)s2.prepared=true;draw();show(r)};
+}
+function show(p){
+  const rtl=p.lang==='ar'?'rtl':'ltr';
+  $('#editor').innerHTML=`${p.refused?`<div class="note">The AI advised against posting this one: ${esc(p.refused)}. Text below is the paper's headline; post only if you're sure.</div>`:''}
+  <div class="slides">
+    <figure><img src="${p.card}" alt="Slide 1"><figcaption>Slide 1 · news card <a download="newz213-${p.id}-1.jpg" href="${p.card}"><button>Download</button></a></figcaption></figure>
+    <figure><img src="${p.promo}" alt="Slide 2"><figcaption>Slide 2 · promo <a download="newz213-${p.id}-2.jpg" href="${p.promo}"><button>Download</button></a></figcaption></figure>
+  </div>
+  <div class="fields">
+    <div><label>Headline (on the card)</label><input id="f-h" dir="${rtl}" value="${esc(p.headline)}"></div>
+    <div><label>Detail line (on the card)</label><input id="f-s" dir="${rtl}" value="${esc(p.subline)}"></div>
+    <div><label>Section badge</label><input id="f-sec" dir="${rtl}" value="${esc(p.section)}" style="max-width:220px"></div>
+    <div class="row"><button id="rr">Re-render card</button><span class="meta">Photo: ${esc(p.photo_src||'')}</span></div>
+    <div><label>Caption</label><textarea id="f-c" dir="${rtl}">${esc(p.caption)}</textarea></div>
+    <div class="row"><button class="primary" id="copy">Copy caption</button><button id="reset">Rebuild caption from fields</button><button id="reveal">Show files in Finder</button><span class="sp" style="flex:1"></span><button id="posted">Mark as posted</button></div>
+    <p class="meta">On Instagram: upload slide 1 then slide 2, choose the 4:5 crop, paste the caption.</p>
+  </div>`;
+  const fields=()=>({id:p.id,headline:$('#f-h').value,subline:$('#f-s').value,section:$('#f-sec').value,caption:$('#f-c').value});
+  $('#rr').onclick=async()=>{$('#rr').disabled=true;$('#rr').textContent='Rendering…';const r=await api('/api/rerender',fields());r.error?toast(r.error):show(r)};
+  $('#reset').onclick=async()=>{const f=fields();delete f.caption;f.reset_caption=true;const r=await api('/api/rerender',f);r.error?toast(r.error):show(r)};
+  $('#copy').onclick=async()=>{await navigator.clipboard.writeText($('#f-c').value);toast('Caption copied')};
+  $('#reveal').onclick=()=>api('/api/reveal',{id:p.id});
+  $('#posted').onclick=async()=>{const r=await api('/api/posted',{id:p.id});toast(r.error||r.note);const s=stories.find(x=>x.id===p.id);if(s&&!r.error){s.posted=true;draw()}load(false)};
+}
+load(false);
+</script>
+</body></html>
