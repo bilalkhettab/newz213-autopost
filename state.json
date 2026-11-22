@@ -300,6 +300,24 @@
    ],
    "writer": "manual",
    "status": "manual"
+  },
+  {
+   "at": "2026-11-22T09:28:07.921938+00:00",
+   "key": "1019dbde7b02",
+   "lang": "fr",
+   "headline": "Nouveaux tarifs du passeport algérien au Canada et aux États-Unis",
+   "sources": [
+    "algerie360",
+    "algerieeco",
+    "tsa"
+   ],
+   "links": [
+    "https://algerie-eco.com/2026/11/21/passeport-algerien-les-nouveaux-tarifs-appliques-au-canada-et-aux-etats-unis/",
+    "https://www.algerie360.com/passeport-algerien-frais-consulaires-etats-unis/",
+    "https://www.tsa-algerie.com/passeport-algerien-le-consulat-dalgerie-a-montreal-devoile-les-nouveaux-tarifs/"
+   ],
+   "writer": "manual",
+   "status": "manual"
   }
  ],
  "skipped_links": [
