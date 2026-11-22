@@ -286,6 +286,20 @@
    ],
    "writer": "manual",
    "status": "manual"
+  },
+  {
+   "at": "2026-11-22T09:22:53.307240+00:00",
+   "key": "32c7c63ac2bb",
+   "lang": "ar",
+   "headline": "ارتفاع إنتاج الجزائر من الغاز الطبيعي إلى 24.42 مليار متر مكعب",
+   "sources": [
+    "awras"
+   ],
+   "links": [
+    "https://www.awras.com/%d8%a7%d9%84%d8%ba%d8%a7%d8%b2-%d8%a7%d9%84%d8%ac%d8%b2%d8%a7%d8%a6%d8%b1%d9%8a-%d8%a5%d9%86%d8%aa%d8%a7%d8%ac-%d8%a3%d9%83%d8%a8%d8%b1-%d9%88%d8%a7%d8%b3%d8%aa%d9%87%d9%84%d8%a7%d9%83-%d9%85%d8%ad/"
+   ],
+   "writer": "manual",
+   "status": "manual"
   }
  ],
  "skipped_links": [
