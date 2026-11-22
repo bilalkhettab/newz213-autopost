@@ -122,7 +122,7 @@ function show(p){
     <div><label>Headline (on the card)</label><input id="f-h" dir="${rtl}" value="${esc(p.headline)}"></div>
     <div><label>Detail line (on the card)</label><input id="f-s" dir="${rtl}" value="${esc(p.subline)}"></div>
     <div><label>Section badge</label><input id="f-sec" dir="${rtl}" value="${esc(p.section)}" style="max-width:220px"></div>
-    <div class="row"><button id="rr">Re-render card</button><span class="meta">Photo: ${esc(p.photo_src||'')}</span></div>
+    <div class="row"><button id="rr">Re-render card</button><button id="rw">Rewrite with Claude</button><span class="meta">Photo: ${esc(p.photo_src||'')}</span></div>
     <div><label>Caption</label><textarea id="f-c" dir="${rtl}">${esc(p.caption)}</textarea></div>
     <div class="row"><button class="primary" id="copy">Copy caption</button><button id="reset">Rebuild caption from fields</button><button id="reveal">Show files in Finder</button></div>
     <p class="meta">On Instagram: upload slide 1 then slide 2, choose the 4:5 crop, paste the caption.</p>
@@ -130,6 +130,7 @@ function show(p){
   const fields=()=>({id:p.id,headline:$('#f-h').value,subline:$('#f-s').value,section:$('#f-sec').value,caption:$('#f-c').value});
   $('#rr').onclick=async()=>{$('#rr').disabled=true;$('#rr').textContent='Rendering…';const r=await api('/api/rerender',fields());r.error?toast(r.error):show(r)};
   $('#reset').onclick=async()=>{const f=fields();delete f.caption;f.reset_caption=true;const r=await api('/api/rerender',f);r.error?toast(r.error):show(r)};
+  $('#rw').onclick=async()=>{$('#rw').disabled=true;$('#rw').textContent='Writing…';const r=await api('/api/rewrite',{id:p.id});r.error?(toast(r.error),$('#rw').disabled=false,$('#rw').textContent='Rewrite with Claude'):show(r)};
   $('#copy').onclick=async()=>{await navigator.clipboard.writeText($('#f-c').value);toast('Caption copied')};
   $('#reveal').onclick=()=>api('/api/reveal',{id:p.id});
   $('#posted').onclick=async()=>{await togglePosted(p.id);const s=stories.find(x=>x.id===p.id);$('#posted').classList.toggle('primary',!s.posted)};

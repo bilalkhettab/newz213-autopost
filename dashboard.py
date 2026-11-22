@@ -141,6 +141,26 @@ def prepare(key: str) -> dict:
     return render(key, post)
 
 
+def rewrite(key: str) -> dict:
+    """Write the text again with Claude (keeps the photo)."""
+    s = STORIES.get(key)
+    d = job_dir(key)
+    if not s or not (d / "post.json").exists():
+        return {"error": "Prepare the story first."}
+    if not use_ai():
+        return {"error": "No ANTHROPIC_API_KEY in .env: can't rewrite with Claude."}
+    old = json.loads((d / "post.json").read_text(encoding="utf-8"))
+    post = ap.write_with_claude(s, old["lang"])
+    if post is None:
+        return {"error": "Claude didn't answer. Try again."}
+    refused = None if post.get("publish", True) else (post.get("reason") or "refused")
+    if refused:
+        post = {**ap.write_with_template(s, old["lang"])}
+    post.update(lang=old["lang"], photo_src=old["photo_src"], writer="template" if refused else "claude",
+                refused=refused, caption_edited=False)
+    return render(key, post)
+
+
 def rerender(key: str, fields: dict) -> dict:
     d = job_dir(key)
     if key not in STORIES or not (d / "post.json").exists():
@@ -247,6 +267,8 @@ class Handler(BaseHTTPRequestHandler):
             key = body.get("id", "")
             if u.path == "/api/prepare":
                 self.json(prepare(key))
+            elif u.path == "/api/rewrite":
+                self.json(rewrite(key))
             elif u.path == "/api/rerender":
                 self.json(rerender(key, body))
             elif u.path == "/api/posted":
