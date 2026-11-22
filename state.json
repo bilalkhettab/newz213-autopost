@@ -318,6 +318,22 @@
    ],
    "writer": "manual",
    "status": "manual"
+  },
+  {
+   "at": "2026-11-22T09:33:02.508790+00:00",
+   "key": "46136c91c660",
+   "lang": "fr",
+   "headline": "Le CPA détaille les conditions d'accès à CPAzonepay",
+   "sources": [
+    "algerie360",
+    "algerieeco"
+   ],
+   "links": [
+    "https://algerie-eco.com/2026/11/21/cpazonepay-les-conditions-dacces-et-les-frais-pour-recevoir-des-paiements-depuis-letranger/",
+    "https://www.algerie360.com/cpa-cpazonepay-conditions-acces-auto-entrepreneur/"
+   ],
+   "writer": "manual",
+   "status": "manual"
   }
  ],
  "skipped_links": [
