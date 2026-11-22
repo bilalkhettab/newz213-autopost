@@ -157,26 +157,37 @@ def rerender(key: str, fields: dict) -> dict:
     return render(key, post)
 
 
-def mark_posted(key: str) -> dict:
+def mark_posted(key: str, posted: bool = True) -> dict:
+    """Record (or un-record) a story as posted by hand. Works with or without "Prepare"."""
     s = STORIES.get(key)
-    d = job_dir(key)
-    if not s or not (d / "post.json").exists():
-        return {"error": "Prepare the story first."}
-    post = json.loads((d / "post.json").read_text(encoding="utf-8"))
+    if not s:
+        return {"error": "Story not found. Refresh the list."}
+    f = job_dir(key) / "post.json"
+    post = json.loads(f.read_text(encoding="utf-8")) if f.exists() else {"lang": s[0]["lang"], "headline": s[0]["title"]}
     subprocess.run(["git", "pull", "-q", "--rebase", "--autostash"], cwd=ROOT)
     state = ap.load_state()
-    if any(p.get("key") == key for p in state["posts"]):
-        return {"ok": True, "note": "Already recorded."}
-    state["posts"].append({
-        "at": dt.datetime.now(dt.timezone.utc).isoformat(), "key": key, "lang": post["lang"],
-        "headline": post["headline"], "sources": sorted({a["source"] for a in s}),
-        "links": [a["link"] for a in s], "writer": "manual", "status": "manual"})
+    links = {a["link"] for a in s}
+    if posted:
+        if any(p.get("key") == key or links & set(p.get("links", [])) for p in state["posts"]):
+            return {"ok": True, "note": "Already marked as posted."}
+        state["posts"].append({
+            "at": dt.datetime.now(dt.timezone.utc).isoformat(), "key": key, "lang": post["lang"],
+            "headline": post["headline"], "sources": sorted({a["source"] for a in s}),
+            "links": sorted(links), "writer": "manual", "status": "manual"})
+        msg, note = f"manual post: {post['headline'][:60]}", "Marked as posted"
+    else:
+        before = len(state["posts"])
+        state["posts"] = [p for p in state["posts"]
+                          if not (p.get("status") == "manual" and (p.get("key") == key or links & set(p.get("links", []))))]
+        if len(state["posts"]) == before:
+            return {"error": "Only stories marked by hand can be unmarked (the bot's own posts stay)."}
+        msg, note = f"unmark manual post: {post['headline'][:60]}", "Unmarked"
     ap.save_state(state)
     try:
-        ap.git_push([ap.STATE], f"manual post: {post['headline'][:60]}")
-        return {"ok": True, "note": "Recorded and pushed: the bot won't repost it."}
+        ap.git_push([ap.STATE], msg)
+        return {"ok": True, "note": note + " (saved for the bot too)."}
     except Exception:
-        return {"ok": True, "note": "Recorded on this Mac (push failed, it will go with the next push)."}
+        return {"ok": True, "note": note + " on this Mac (will sync with the next push)."}
 
 
 def today_summary() -> dict:
@@ -239,7 +250,7 @@ class Handler(BaseHTTPRequestHandler):
             elif u.path == "/api/rerender":
                 self.json(rerender(key, body))
             elif u.path == "/api/posted":
-                self.json(mark_posted(key))
+                self.json(mark_posted(key, body.get("posted", True)))
             elif u.path == "/api/reveal":
                 subprocess.run(["open", "-R", str(job_dir(key) / "card.jpg")])
                 self.json({"ok": True})

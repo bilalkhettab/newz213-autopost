@@ -22,6 +22,11 @@ button:disabled{opacity:.5;cursor:default}
 .item:hover,.item.sel{background:var(--panel)}
 .item.posted{opacity:.45}
 .item .t{font-weight:600;margin:4px 0}
+.item{position:relative;padding-right:58px}
+.mk{position:absolute;right:12px;top:12px;width:36px;height:36px;padding:0;border-radius:50%;font-size:17px;line-height:1}
+.mk.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.item.posted .mk{opacity:1}
+.item.posted{opacity:1}.item.posted .t,.item.posted .meta{opacity:.45}
 .item .t[dir=rtl]{font-family:"Geeza Pro","SF Arabic",sans-serif;font-size:16px}
 .meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted);align-items:center}
 .chip{background:var(--chip);border-radius:999px;padding:1px 8px}
@@ -73,11 +78,22 @@ async function load(refresh){
 function draw(){
   const list=stories.filter(s=>filter==='all'||(filter==='multi'?s.papers>1:s.lang===filter));
   $('#items').innerHTML=list.map(s=>`<div class="item ${s.posted?'posted':''} ${sel===s.id?'sel':''}" data-id="${s.id}">
+    <button class="mk ${s.posted?'on':''}" data-mk="${s.id}" title="${s.posted?'Posted. Click to unmark':'Mark as posted'}">✓</button>
     <div class="meta"><span class="chip ${s.papers>1?'n':''}">${s.papers} paper${s.papers>1?'s':''}</span><span class="chip">${s.lang.toUpperCase()}</span><span>${ago(s.age_min)} ago</span>${s.posted?'<span>· posted</span>':''}${s.prepared&&!s.posted?'<span>· prepared</span>':''}</div>
     <div class="t" dir="${s.lang==='ar'?'rtl':'ltr'}">${esc(s.title)}</div>
     <div class="meta">${esc(s.sources.join(' · '))}</div></div>`).join('')||'<div class="empty">No story here.</div>';
 }
-$('#items').onclick=e=>{const it=e.target.closest('.item');if(it)open(it.dataset.id)};
+$('#items').onclick=async e=>{
+  const mk=e.target.closest('[data-mk]');
+  if(mk){e.stopPropagation();await togglePosted(mk.dataset.mk);return}
+  const it=e.target.closest('.item');if(it)open(it.dataset.id)};
+async function togglePosted(id){
+  const s=stories.find(x=>x.id===id);const want=!s.posted;
+  const r=await api('/api/posted',{id,posted:want});toast(r.error||r.note);
+  if(!r.error){s.posted=want;draw();if(sel===id){const b=document.querySelector('#posted');if(b)b.textContent=want?'✓ Posted (unmark)':'Mark as posted'}refreshStats()}
+}
+async function refreshStats(){const d=await api('/api/stories');const last=d.last_min==null?'none yet':`${ago(d.last_min)} ago`;
+  $('#stats').textContent=`${d.now} Algiers · posted today: ${d.today} · last post: ${last} · writer: ${d.ai?'Claude':'paper headline'}`}
 $('#filters').onclick=e=>{const b=e.target.closest('button');if(!b)return;filter=b.dataset.f;[...$('#filters').children].forEach(x=>x.classList.toggle('on',x===b));draw()};
 $('#refresh').onclick=()=>load(true);
 
@@ -88,14 +104,16 @@ async function open(id){
   $('#editor').innerHTML=`<div class="t" dir="${s.lang==='ar'?'rtl':'ltr'}" style="font-size:20px;font-weight:700">${esc(s.title)}</div>
     <p class="meta">${esc(s.sources.join(' · '))} · ${ago(s.age_min)} ago</p>
     <p class="links">${s.links.map((l,i)=>`<a href="${esc(l)}" target="_blank">Article ${i+1} ↗</a>`).join('')}</p>
-    <button class="primary" id="prep">Prepare</button>`;
+    <div class="row"><button class="primary" id="prep">Prepare</button><button id="posted">${s.posted?'✓ Posted (unmark)':'Mark as posted'}</button></div>`;
+  $('#posted').onclick=()=>togglePosted(id);
   $('#prep').onclick=async()=>{$('#prep').disabled=true;$('#prep').textContent='Preparing… (photo, text, card)';
     const r=await api('/api/prepare',{id});if(r.error){$('#prep').textContent=r.error;return}
     const s2=stories.find(x=>x.id===id);if(s2)s2.prepared=true;draw();show(r)};
 }
 function show(p){
   const rtl=p.lang==='ar'?'rtl':'ltr';
-  $('#editor').innerHTML=`${p.refused?`<div class="note">The AI advised against posting this one: ${esc(p.refused)}. Text below is the paper's headline; post only if you're sure.</div>`:''}
+  const st=stories.find(x=>x.id===p.id)||{};
+  $('#editor').innerHTML=`<div class="row" style="margin-bottom:12px"><button class="${st.posted?'':'primary'}" id="posted">${st.posted?'✓ Posted (unmark)':'Mark as posted'}</button><span class="meta">Mark it once it's live on Instagram.</span></div>${p.refused?`<div class="note">The AI advised against posting this one: ${esc(p.refused)}. Text below is the paper's headline; post only if you're sure.</div>`:''}
   <div class="slides">
     <figure><img src="${p.card}" alt="Slide 1"><figcaption>Slide 1 · news card <a download="newz213-${p.id}-1.jpg" href="${p.card}"><button>Download</button></a></figcaption></figure>
     <figure><img src="${p.promo}" alt="Slide 2"><figcaption>Slide 2 · promo <a download="newz213-${p.id}-2.jpg" href="${p.promo}"><button>Download</button></a></figcaption></figure>
@@ -106,7 +124,7 @@ function show(p){
     <div><label>Section badge</label><input id="f-sec" dir="${rtl}" value="${esc(p.section)}" style="max-width:220px"></div>
     <div class="row"><button id="rr">Re-render card</button><span class="meta">Photo: ${esc(p.photo_src||'')}</span></div>
     <div><label>Caption</label><textarea id="f-c" dir="${rtl}">${esc(p.caption)}</textarea></div>
-    <div class="row"><button class="primary" id="copy">Copy caption</button><button id="reset">Rebuild caption from fields</button><button id="reveal">Show files in Finder</button><span class="sp" style="flex:1"></span><button id="posted">Mark as posted</button></div>
+    <div class="row"><button class="primary" id="copy">Copy caption</button><button id="reset">Rebuild caption from fields</button><button id="reveal">Show files in Finder</button></div>
     <p class="meta">On Instagram: upload slide 1 then slide 2, choose the 4:5 crop, paste the caption.</p>
   </div>`;
   const fields=()=>({id:p.id,headline:$('#f-h').value,subline:$('#f-s').value,section:$('#f-sec').value,caption:$('#f-c').value});
@@ -114,7 +132,7 @@ function show(p){
   $('#reset').onclick=async()=>{const f=fields();delete f.caption;f.reset_caption=true;const r=await api('/api/rerender',f);r.error?toast(r.error):show(r)};
   $('#copy').onclick=async()=>{await navigator.clipboard.writeText($('#f-c').value);toast('Caption copied')};
   $('#reveal').onclick=()=>api('/api/reveal',{id:p.id});
-  $('#posted').onclick=async()=>{const r=await api('/api/posted',{id:p.id});toast(r.error||r.note);const s=stories.find(x=>x.id===p.id);if(s&&!r.error){s.posted=true;draw()}load(false)};
+  $('#posted').onclick=async()=>{await togglePosted(p.id);const s=stories.find(x=>x.id===p.id);$('#posted').classList.toggle('primary',!s.posted)};
 }
 load(false);
 </script>
