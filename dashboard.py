@@ -72,6 +72,8 @@ def story_info(key: str, s: list[dict], state: dict) -> dict:
         "posted": any(a["link"] in posted for a in s),
         "prepared": (job_dir(key) / "post.json").exists(),
         "links": [a["link"] for a in s][:4],
+        "articles": [{"paper": ap.SOURCES[a["source"]][0], "title": a["title"], "link": a["link"],
+                      "lang": a["lang"]} for a in s],
     }
 
 
