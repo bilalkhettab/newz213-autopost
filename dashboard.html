@@ -45,6 +45,11 @@ textarea{min-height:190px;resize:vertical}
 .note{background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 12px;font-size:13px;margin-bottom:12px}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
+.pics{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pics button{padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;width:120px;background:none;position:relative}
+.pics button.on{border-color:var(--accent)}
+.pics img{display:block;width:100%;height:80px;object-fit:cover}
+.pics small{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:2px 4px;text-align:left}
 .links a{color:var(--muted);font-size:12px;margin-right:10px}
 .arts{margin:14px 0 4px;padding:0;list-style:none;max-width:740px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .arts li{border-bottom:1px solid var(--line)}.arts li:last-child{border-bottom:0}
@@ -125,6 +130,7 @@ function show(p){
     <figure><img src="${p.card}" alt="Slide 1"><figcaption>Slide 1 · news card <a download="newz213-${p.id}-1.jpg" href="${p.card}"><button>Download</button></a></figcaption></figure>
     <figure><img src="${p.promo}" alt="Slide 2"><figcaption>Slide 2 · promo <a download="newz213-${p.id}-2.jpg" href="${p.promo}"><button>Download</button></a></figcaption></figure>
   </div>
+  <div id="pics"><label style="margin-top:14px">Photo</label><div class="pics" id="picrow"><span class="meta">Finding all the photos…</span></div></div>
   <div class="fields">
     <div><label>Headline (on the card)</label><input id="f-h" dir="${rtl}" value="${esc(p.headline)}"></div>
     <div><label>Detail line (on the card)</label><input id="f-s" dir="${rtl}" value="${esc(p.subline)}"></div>
@@ -138,6 +144,10 @@ function show(p){
   const fields=()=>({id:p.id,headline:$('#f-h').value,subline:$('#f-s').value,section:$('#f-sec').value,caption:$('#f-c').value});
   $('#rr').onclick=async()=>{$('#rr').disabled=true;$('#rr').textContent='Rendering…';const r=await api('/api/rerender',fields());r.error?toast(r.error):show(r)};
   $('#reset').onclick=async()=>{const f=fields();delete f.caption;f.reset_caption=true;const r=await api('/api/rerender',f);r.error?toast(r.error):show(r)};
+  const drawPics=q=>{const ph=q.photos||[];const cur=q.photo_index??-1;
+    $('#picrow').innerHTML=ph.length?ph.map((x,i)=>`<button data-n="${i}" class="${(cur===i||(cur<0&&x.src===q.photo_src&&i===ph.findIndex(y=>y.src===q.photo_src)))?'on':''}" title="${esc(x.src)} · ${x.size}"><img src="${x.url}"><small>${esc(x.src)} · ${x.size}</small></button>`).join(''):'<span class="meta">Only one usable photo for this story.</span>';
+    $('#picrow').onclick=async e=>{const b=e.target.closest('[data-n]');if(!b)return;[...$('#picrow').children].forEach(x=>x.classList.toggle('on',x===b));toast('Rendering with this photo…');const r=await api('/api/photo',{id:p.id,n:+b.dataset.n});r.error?toast(r.error):show(r)}};
+  if(p.photos&&p.photos.length)drawPics(p);else api('/api/photos',{id:p.id}).then(r=>{if(!r.error&&sel===p.id)drawPics(r)});
   $('#rw').onclick=async()=>{$('#rw').disabled=true;$('#rw').textContent='Writing…';const r=await api('/api/rewrite',{id:p.id});r.error?(toast(r.error),$('#rw').disabled=false,$('#rw').textContent='Rewrite with Claude'):show(r)};
   $('#copy').onclick=async()=>{await navigator.clipboard.writeText($('#f-c').value);toast('Caption copied')};
   $('#reveal').onclick=()=>api('/api/reveal',{id:p.id});

@@ -94,6 +94,57 @@ def list_stories(refresh: bool) -> list[dict]:
     return out
 
 
+def collect_photos(key: str) -> list[dict]:
+    """Every usable photo (>= 600x400) from the story's articles: feed image and article-page og:image.
+    Saved as photo-N.jpg in the story folder; the list is cached in photos.json."""
+    import io
+    from PIL import Image
+
+    d = job_dir(key)
+    cache = d / "photos.json"
+    if cache.exists():
+        return json.loads(cache.read_text(encoding="utf-8"))
+    d.mkdir(parents=True, exist_ok=True)
+    seen, out = set(), []
+    for a in STORIES[key]:
+        urls = ([a["image"]] if a.get("image") else []) + ap.page_images(a["link"])
+        for u in urls:
+            if u in seen:
+                continue
+            seen.add(u)
+            try:
+                im = Image.open(io.BytesIO(ap.http_get(u, timeout=20)))
+                im.load()
+            except Exception:
+                continue
+            if im.size[0] < 600 or im.size[1] < 400:
+                continue
+            sig = im.convert("L").resize((16, 16)).tobytes()  # same picture at another size: keep one
+            if any(sum(abs(x - y) for x, y in zip(sig, bytes.fromhex(p["sig"]))) / 256 < 12 for p in out):
+                continue
+            n = len(out) + 1
+            im.convert("RGB").save(d / f"photo-{n}.jpg", "JPEG", quality=92)
+            out.append({"file": f"photo-{n}.jpg", "src": ap.SOURCES[a["source"]][0],
+                        "w": im.size[0], "h": im.size[1], "sig": sig.hex()})
+            if len(out) >= 8:
+                break
+    cache.write_text(json.dumps(out), encoding="utf-8")
+    return out
+
+
+def choose_photo(key: str, n: int) -> dict:
+    d = job_dir(key)
+    if key not in STORIES or not (d / "post.json").exists():
+        return {"error": "Prepare the story first."}
+    photos = collect_photos(key)
+    if not 0 <= n < len(photos):
+        return {"error": "Photo not found."}
+    shutil.copy(d / photos[n]["file"], d / "photo.jpg")
+    post = json.loads((d / "post.json").read_text(encoding="utf-8"))
+    post.update(photo_src=photos[n]["src"], photo_index=n)
+    return render(key, post)
+
+
 def render(key: str, post: dict) -> dict:
     s = STORIES[key]
     d = job_dir(key)
@@ -114,7 +165,13 @@ def view(key: str, post: dict) -> dict:
     v = int(time.time())
     day = job_dir(key).parent.name
     base = f"/files/{day}/{key}"
-    return {**post, "id": key, "card": f"{base}/card.jpg?v={v}", "promo": f"{base}/promo.jpg?v={v}"}
+    photos = []
+    cache = job_dir(key) / "photos.json"
+    if cache.exists():
+        photos = [{"url": f"{base}/{p['file']}", "src": p["src"], "size": f"{p['w']}×{p['h']}"}
+                  for p in json.loads(cache.read_text(encoding="utf-8"))]
+    return {**post, "id": key, "card": f"{base}/card.jpg?v={v}", "promo": f"{base}/promo.jpg?v={v}",
+            "photos": photos}
 
 
 def prepare(key: str) -> dict:
@@ -269,6 +326,12 @@ class Handler(BaseHTTPRequestHandler):
             key = body.get("id", "")
             if u.path == "/api/prepare":
                 self.json(prepare(key))
+            elif u.path == "/api/photos":
+                collect_photos(key)
+                f = job_dir(key) / "post.json"
+                self.json(view(key, json.loads(f.read_text(encoding="utf-8"))) if f.exists() else {"error": "Prepare first."})
+            elif u.path == "/api/photo":
+                self.json(choose_photo(key, int(body.get("n", 0))))
             elif u.path == "/api/rewrite":
                 self.json(rewrite(key))
             elif u.path == "/api/rerender":
